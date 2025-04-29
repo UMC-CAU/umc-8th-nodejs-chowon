@@ -1,12 +1,36 @@
-// const express = require('express')  // -> CommonJS
-import express from "express"; // -> ES Module
+import express from "express";
+import dotenv from "dotenv";
+import cors from "cors";
+import { signupController } from "./controllers/user.controller.js";
 
+dotenv.config();
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
+
+// 라우터
+const router = express.Router();
+const authRouter = express.Router();
+const signupRouter = express.Router();
+
+app.use(cors());
+app.use(express.static("public")); // 정적 파일을 제공하는 미들웨어 설정
+app.use(express.json()); // JSON 형식의 요청 본문을 파싱하는 미들웨어 설정
+app.use(express.urlencoded({ extended: true })); // URL 인코딩 형식의 요청 본문을 파싱하는 미들웨어 설정
 
 app.get("/", (req, res) => {
     res.send("Hello World!");
 });
+
+// "/auth/signup" 경로에 대한 라우터 설정
+signupRouter.post("/", signupController.create);
+signupRouter.patch("/info", signupController.updateInfo);
+signupRouter.patch("/terms", signupController.updateTerms);
+signupRouter.patch("/foods", signupController.updateFoods);
+signupRouter.patch("/status", signupController.updateStatus);
+
+authRouter.use("/signup", signupRouter);
+router.use("/auth", authRouter);
+app.use("/api/v1", router);
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`);
