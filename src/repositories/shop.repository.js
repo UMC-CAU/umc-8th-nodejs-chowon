@@ -90,3 +90,53 @@ export const getReviewById = async (reviewId) => {
         conn.release();
     }
 };
+
+export const createMission = async (data) => {
+    const conn = await pool.getConnection();
+    try {
+        const [shop] = await pool.query(`SELECT id FROM shop WHERE id = ?`, [
+            data.shopId,
+        ]);
+        if (shop.length === 0) {
+            throw new Error("가게를 찾을 수 없습니다.");
+        }
+
+        const [result] = await pool.query(
+            `INSERT INTO mission (shop_id, point, price_criterion, due_date, created_at, updated_at)
+            VALUES (?, ?, ?, ?, ?, ?)`,
+            [
+                data.shopId,
+                data.point,
+                data.priceCriterion,
+                data.dueDate,
+                new Date(),
+                new Date(),
+            ]
+        );
+        return result.insertId;
+    } catch (err) {
+        throw new Error(
+            `오류가 발생했습니다. 요청 파라미터를 확인해주세요. (${err})`
+        );
+    } finally {
+        conn.release();
+    }
+}
+export const getMissionById = async (missionId) => {
+    const conn = await pool.getConnection();
+    try {
+        const [mission] = await pool.query(
+            `SELECT id, shop_id, point, price_criterion, due_date, created_at, updated_at
+            FROM mission
+            WHERE id = ?`,
+            [missionId]
+        );
+        return mission.length > 0 ? mission[0] : null;
+    } catch (err) {
+        throw new Error(
+            `오류가 발생했습니다. 요청 파라미터를 확인해주세요. (${err})`
+        );
+    } finally {
+        conn.release();
+    }
+}
