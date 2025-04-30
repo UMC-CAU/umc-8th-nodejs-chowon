@@ -1,5 +1,5 @@
 // 1. 기본 회원가입용 DTO (이메일, 비밀번호)
-export const bodyToUser = (body) => {
+export const CreateUserDto = (body) => {
     return {
         email: body.email,
         socialType: body.social_type,
@@ -8,7 +8,7 @@ export const bodyToUser = (body) => {
 };
 
 // 2. 회원 정보 업데이트용 DTO
-export const bodyToUserInfo = (body) => {
+export const UpdateUserInfoDto = (body) => {
     // ISO 형식 문자열을 Date 객체로 변환
     const birth = new Date(body.birth);
     
@@ -22,7 +22,7 @@ export const bodyToUserInfo = (body) => {
 };
 
 // 3. 약관 동의 업데이트용 DTO
-export const bodyToUserTerms = (body) => {
+export const UpdateUserTermsDto = (body) => {
     return {
         serviceCheck: Boolean(body.serviceCheck), // 서비스 이용약관
         privacyCheck: Boolean(body.privacyCheck), // 개인정보 처리방침
@@ -33,14 +33,14 @@ export const bodyToUserTerms = (body) => {
 };
 
 // 4. 음식 선호도 업데이트용 DTO
-export const bodyToUserFoods = (body) => {
+export const UpdateUserFoodsDto = (body) => {
     return {
         preferences: Array.isArray(body.foodSelect) ? body.foodSelect : [],
     };
 };
 
 // 5. 계정 상태 업데이트용 DTO
-export const bodyToUserStatus = (body) => {
+export const UpdateUserStatusDto = (body) => {
     return {
         status: Boolean(body.status), // true: 활성화, false: 비활성화
     };

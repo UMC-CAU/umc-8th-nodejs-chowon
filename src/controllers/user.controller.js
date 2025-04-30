@@ -7,12 +7,12 @@ import {
     updateUserStatus,
 } from "../services/user.service.js";
 import {
-    bodyToUser,
-    bodyToUserInfo,
-    bodyToUserTerms,
-    bodyToUserFoods,
-    bodyToUserStatus,
-} from "../dtos/user.dto.js";
+    CreateUserDto,
+    UpdateUserInfoDto,
+    UpdateUserTermsDto,
+    UpdateUserFoodsDto,
+    UpdateUserStatusDto,
+} from "../dtos/request/user.dto.js";
 
 // 비활성 유저 생성
 const signupUser = async (req, res) => {
@@ -20,7 +20,7 @@ const signupUser = async (req, res) => {
     console.log("body:", req.body);
 
     try {
-        const userDto = bodyToUser(req.body);
+        const userDto = CreateUserDto(req.body);
         const user = await userSignUp(userDto);
         res.status(StatusCodes.OK).json({ result: user });
     } catch (error) {
@@ -34,7 +34,7 @@ const updateSignupInfo = async (req, res) => {
 
     try {
         const userId = req.body.id;
-        const userInfoDto = bodyToUserInfo(req.body);
+        const userInfoDto = UpdateUserInfoDto(req.body);
         const result = await updateUserInfo(userId, userInfoDto);
         res.status(StatusCodes.OK).json({ result });
     } catch (error) {
@@ -48,7 +48,7 @@ const updateSignupTerms = async (req, res) => {
 
     try {
         const userId = req.body.id;
-        const userTermsDto = bodyToUserTerms(req.body);
+        const userTermsDto = UpdateUserTermsDto(req.body);
         const result = await updateUserTerms(userId, userTermsDto);
         res.status(StatusCodes.OK).json({ result });
     } catch (error) {
@@ -62,7 +62,7 @@ const updateSignupFoods = async (req, res) => {
 
     try {
         const userId = req.body.id;
-        const userFoodsDto = bodyToUserFoods(req.body);
+        const userFoodsDto = UpdateUserFoodsDto(req.body);
         const result = await updateUserFoods(userId, userFoodsDto);
         res.status(StatusCodes.OK).json({ result });
     } catch (error) {
@@ -76,7 +76,7 @@ const updateSignupStatus = async (req, res) => {
 
     try {
         const userId = req.body.id;
-        const userStatusDto = bodyToUserStatus(req.body);
+        const userStatusDto = UpdateUserStatusDto(req.body);
         const result = await updateUserStatus(userId, userStatusDto);
         res.status(StatusCodes.OK).json({ result });
     } catch (error) {

@@ -1,4 +1,4 @@
-export const responseFromUser = (user) => {
+export const UserResponseDto = (user) => {
     return {
         id: user.id,
         email: user.email,
@@ -7,7 +7,7 @@ export const responseFromUser = (user) => {
     };
 };
 
-export const responseFromUserInfo = (user) => {
+export const UserInfoResponseDto = (user) => {
     return {
         id: user.id,
         name: user.name,
@@ -18,7 +18,7 @@ export const responseFromUserInfo = (user) => {
     };
 };
 
-export const responseFromUserTerms = (user) => {
+export const UserTermsResponseDto = (user) => {
     return {
         id: user.id,
         serviceCheck: user.service_check,
@@ -29,14 +29,14 @@ export const responseFromUserTerms = (user) => {
     };
 }
 
-export const responseFromUserFoods = (userId, preferences) => {
+export const UserFoodsResponseDto = (userId, preferences) => {
     return {
         id: userId,
         preferences,
     };
 };
 
-export const responseFromUserStatus = (user) => {
+export const UserStatusResponseDto = (user) => {
     return {
         id: user.id,
         status: user.status,

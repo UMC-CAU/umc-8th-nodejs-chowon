@@ -11,12 +11,12 @@ import {
     setUserTerms,
 } from "../repositories/user.repository.js";
 import {
-    responseFromUser,
-    responseFromUserFoods,
-    responseFromUserInfo,
-    responseFromUserStatus,
-    responseFromUserTerms,
-} from "./user.dto.js";
+    UserResponseDto,
+    UserFoodsResponseDto,
+    UserInfoResponseDto,
+    UserStatusResponseDto,
+    UserTermsResponseDto,
+} from "../dtos/response/user.dto.js";
 
 export const userSignUp = async (data) => {
     const userId = await addUser({
@@ -28,7 +28,7 @@ export const userSignUp = async (data) => {
         throw new Error("이미 존재하는 이메일입니다.");
     }
     const user = await getUserById(userId);
-    return responseFromUser(user);
+    return UserResponseDto(user);
 };
 
 export const updateUserInfo = async (userId, data) => {
@@ -46,7 +46,7 @@ export const updateUserInfo = async (userId, data) => {
     });
 
     const info = await getUserInfoById(userId);
-    return responseFromUserInfo(info);
+    return UserInfoResponseDto(info);
 };
 
 export const updateUserTerms = async (userId, data) => {
@@ -60,7 +60,7 @@ export const updateUserTerms = async (userId, data) => {
     });
 
     const terms = await getUserTermsById(userId);
-    return responseFromUserTerms(terms);
+    return UserTermsResponseDto(terms);
 };
 
 export const updateUserFoods = async (userId, data) => {
@@ -68,7 +68,7 @@ export const updateUserFoods = async (userId, data) => {
         await setUserPreference({ userId, foodId: food_id });
     }
     const preferences = await getUserPreferencesByUserId(userId);
-    return responseFromUserFoods(userId, preferences);
+    return UserFoodsResponseDto(userId, preferences);
 };
 
 export const updateUserStatus = async (userId, data) => {
@@ -78,5 +78,5 @@ export const updateUserStatus = async (userId, data) => {
     });
 
     const status = await getUserStatusById(userId);
-    return responseFromUserStatus(status);
+    return UserStatusResponseDto(status);
 };
