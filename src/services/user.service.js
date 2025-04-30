@@ -1,7 +1,9 @@
 import {
     addUser,
+    addUserMission,
     getUserById,
     getUserInfoById,
+    getUserMissionById,
     getUserPreferencesByUserId,
     getUserStatusById,
     getUserTermsById,
@@ -16,6 +18,7 @@ import {
     UserInfoResponseDto,
     UserStatusResponseDto,
     UserTermsResponseDto,
+    UserMissionResponseDto,
 } from "../dtos/response/user.dto.js";
 
 export const userSignUp = async (data) => {
@@ -80,3 +83,16 @@ export const updateUserStatus = async (userId, data) => {
     const status = await getUserStatusById(userId);
     return UserStatusResponseDto(status);
 };
+
+export const addMission = async (userId, data) => {
+    const user_mission_id = await addUserMission({
+        userId,
+        missionId: data.missionId,
+    });
+    if (user_mission_id === null) {
+        throw new Error("존재하지 않는 미션입니다.");
+    }
+
+    const user_mission = await getUserMissionById(user_mission_id);
+    return UserMissionResponseDto(user_mission);
+}

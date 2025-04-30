@@ -42,3 +42,14 @@ export const UserStatusResponseDto = (user) => {
         status: user.status,
     };
 };
+
+export const UserMissionResponseDto = (user) => {
+    return {
+        id: user.id,
+        userId: user.user_id,
+        missionId: user.mission_id,
+        status: user.status,
+        createdAt: user.created_at,
+        updatedAt: user.updated_at,
+    };
+}

@@ -1,7 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
-import { signupController } from "./controllers/user.controller.js";
+import { signupController, userController } from "./controllers/user.controller.js";
 import { regionController } from "./controllers/region.controller.js";
 import { shopController } from "./controllers/shop.controller.js";
 
@@ -24,6 +24,8 @@ app.use(express.urlencoded({ extended: true })); // URL 인코딩 형식의 요�
 app.get("/", (req, res) => {
     res.send("Hello World!");
 });
+
+router.post("/users/:user_id/missions", userController.addMissionToUser);
 
 // "/auth/signup" 경로에 대한 라우터 설정
 signupRouter.post("/", signupController.create);

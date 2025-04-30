@@ -45,3 +45,9 @@ export const UpdateUserStatusDto = (body) => {
         status: Boolean(body.status), // true: 활성화, false: 비활성화
     };
 };
+
+export const AddMissionDto = (body) => {
+    return {
+        missionId: body.missionId,
+    };
+}

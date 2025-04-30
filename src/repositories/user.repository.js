@@ -255,3 +255,46 @@ export const getUserPreferenceByUserId = async (userId) => {
         conn.release();
     }
 };
+
+export const addUserMission = async (data) => {
+    const conn = await pool.getConnection();
+    try {
+        const [mission] = await pool.query(
+            `SELECT EXISTS(SELECT 1 FROM mission WHERE id = ?) as isExistMission`,
+            data.missionId
+        );
+        if (!mission[0].isExistMission) {
+            return null;
+        }
+
+        const [user_mission] = await pool.query(
+            `
+            INSERT INTO user_mission (user_id, mission_id) VALUES (?, ?)`,
+            [data.userId, data.missionId]
+        );
+        return user_mission.insertId;
+    } catch (err) {
+        throw new Error(
+            `오류가 발생했습니다. 요청 파라미터를 확인해주세요. (${err})`
+        );
+    } finally {
+        conn.release();
+    }
+}
+export const getUserMissionById = async (user_mission_id) => {
+    const conn = await pool.getConnection();
+    try {
+        const [mission] = await pool.query(
+            `SELECT id, user_id, mission_id, status, finish_date, created_at, updated_at
+            FROM user_mission WHERE id = ?`,
+            [user_mission_id]
+        );
+        return mission.length > 0 ? mission[0] : null;
+    } catch (err) {
+        throw new Error(
+            `오류가 발생했습니다. 요청 파라미터를 확인해주세요. (${err})`
+        );
+    } finally {
+        conn.release();
+    }
+};

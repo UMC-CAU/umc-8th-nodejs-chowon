@@ -5,6 +5,7 @@ import {
     updateUserTerms,
     updateUserFoods,
     updateUserStatus,
+    addMission,
 } from "../services/user.service.js";
 import {
     CreateUserDto,
@@ -12,6 +13,7 @@ import {
     UpdateUserTermsDto,
     UpdateUserFoodsDto,
     UpdateUserStatusDto,
+    AddMissionDto,
 } from "../dtos/request/user.dto.js";
 
 // 비활성 유저 생성
@@ -91,3 +93,19 @@ export const signupController = {
     updateFoods: updateSignupFoods,
     updateStatus: updateSignupStatus,
 };
+
+const addMissionToUser = async (req, res) => {
+    console.log("유저에게 미션 추가 중...");
+    const userId = req.params.user_id;
+    try {
+        const missionDto = AddMissionDto(req.body);
+        const mission = await addMission(userId, missionDto);
+        res.status(StatusCodes.OK).json({ result: mission });
+    } catch (error) {
+        res.status(StatusCodes.BAD_REQUEST).json({ message: error.message });
+    }
+};
+
+export const userController = {
+    addMissionToUser,
+}
