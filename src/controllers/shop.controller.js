@@ -1,5 +1,5 @@
 import { StatusCodes } from "http-status-codes";
-import { addMission, addReview } from "../services/shop.service.js";
+import { createMission, createReview } from "../services/shop.service.js";
 import { CreateMissionDto, CreateReviewDto } from "../dtos/request/shop.dto.js";
 
 const createMissionByShopId = async (req, res) => {
@@ -7,7 +7,7 @@ const createMissionByShopId = async (req, res) => {
     const shopId = req.params.shop_id;
     try {
         const missionDto = CreateMissionDto(req.body);
-        const mission = await addMission(shopId, missionDto);
+        const mission = await createMission(shopId, missionDto);
         res.status(StatusCodes.OK).json({ result: mission });
     } catch (error) {
         res.status(StatusCodes.BAD_REQUEST).json({ message: error.message });
@@ -19,7 +19,7 @@ const createReviewByShopId = async (req, res) => {
     const shopId = req.params.shop_id;
     try {
         const reviewDto = CreateReviewDto(req.body);
-        const review = await addReview(shopId, reviewDto);
+        const review = await createReview(shopId, reviewDto);
         res.status(StatusCodes.OK).json({ result: review });
     } catch (error) {
         res.status(StatusCodes.BAD_REQUEST).json({ message: error.message });

@@ -1,11 +1,11 @@
 import { StatusCodes } from "http-status-codes";
 import {
-    userSignUp,
+    createUser,
     updateUserInfo,
     updateUserTerms,
     updateUserFoods,
-    updateUserStatus,
-    addMission,
+    activateUser,
+    assignMissionToUser,
 } from "../services/user.service.js";
 import {
     CreateUserDto,
@@ -23,7 +23,7 @@ const signupUser = async (req, res) => {
 
     try {
         const userDto = CreateUserDto(req.body);
-        const user = await userSignUp(userDto);
+        const user = await createUser(userDto);
         res.status(StatusCodes.OK).json({ result: user });
     } catch (error) {
         res.status(StatusCodes.BAD_REQUEST).json({ message: error.message });
@@ -79,7 +79,7 @@ const updateSignupStatus = async (req, res) => {
     try {
         const userId = req.body.id;
         const userStatusDto = UpdateUserStatusDto(req.body);
-        const result = await updateUserStatus(userId, userStatusDto);
+        const result = await activateUser(userId, userStatusDto);
         res.status(StatusCodes.OK).json({ result });
     } catch (error) {
         res.status(StatusCodes.BAD_REQUEST).json({ message: error.message });
@@ -94,12 +94,12 @@ export const signupController = {
     updateStatus: updateSignupStatus,
 };
 
-const addMissionToUser = async (req, res) => {
+const createUserMission = async (req, res) => {
     console.log("유저에게 미션 추가 중...");
     const userId = req.params.user_id;
     try {
         const missionDto = AddMissionDto(req.body);
-        const mission = await addMission(userId, missionDto);
+        const mission = await assignMissionToUser(userId, missionDto);
         res.status(StatusCodes.OK).json({ result: mission });
     } catch (error) {
         res.status(StatusCodes.BAD_REQUEST).json({ message: error.message });
@@ -107,5 +107,5 @@ const addMissionToUser = async (req, res) => {
 };
 
 export const userController = {
-    addMissionToUser,
+    addMissionToUser: createUserMission,
 }

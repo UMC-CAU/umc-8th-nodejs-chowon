@@ -1,5 +1,6 @@
 import { pool } from "../db.config.js";
 
+// 가게 생성 (region_id)
 export const createShop = async (data) => {
     const conn = await pool.getConnection();
     try {
@@ -36,7 +37,9 @@ export const createShop = async (data) => {
         conn.release();
     }
 };
-export const getShopByShopId = async (shopId) => {
+
+// 가게 조회
+export const findShopById = async (shopId) => {
     const conn = await pool.getConnection();
     try {
         const [shop] = await pool.query(
@@ -55,7 +58,8 @@ export const getShopByShopId = async (shopId) => {
     }
 };
 
-export const getRegionById = async (regionId) => {
+// 지역 조회
+export const findRegionById = async (regionId) => {
     const conn = await pool.getConnection();
     try {
         const [region] = await pool.query(
@@ -72,4 +76,4 @@ export const getRegionById = async (regionId) => {
     } finally {
         conn.release();
     }
-}
+};

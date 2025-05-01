@@ -1,7 +1,7 @@
 import { pool } from "../db.config.js";
 
 // 기본 비활성 유저 생성 (email, password)
-export const addUser = async (data) => {
+export const createUser = async (data) => {
     const conn = await pool.getConnection();
     try {
         const [confirm] = await pool.query(
@@ -25,7 +25,9 @@ export const addUser = async (data) => {
         conn.release();
     }
 };
-export const getUserById = async (userId) => {
+
+// 유저 조회
+export const findUserById = async (userId) => {
     const conn = await pool.getConnection();
     try {
         const [user] = await pool.query(
@@ -44,7 +46,8 @@ export const getUserById = async (userId) => {
     }
 };
 
-export const setUserInfo = async (data) => {
+// 유저 정보 수정
+export const updateUserInfo = async (data) => {
     const conn = await pool.getConnection();
     try {
         await pool.query(
@@ -70,7 +73,9 @@ export const setUserInfo = async (data) => {
         conn.release();
     }
 };
-export const getUserInfoById = async (userId) => {
+
+// 유저 정보 조회
+export const findUserInfoById = async (userId) => {
     const conn = await pool.getConnection();
     try {
         const [user] = await pool.query(
@@ -90,7 +95,8 @@ export const getUserInfoById = async (userId) => {
     }
 };
 
-export const setUserTerms = async (data) => {
+// 유저 약관 동의 수정
+export const updateUserTerms = async (data) => {
     const conn = await pool.getConnection();
     try {
         await pool.query(
@@ -116,7 +122,9 @@ export const setUserTerms = async (data) => {
         conn.release();
     }
 };
-export const getUserTermsById = async (userId) => {
+
+// 유저 약관 동의 조회
+export const findUserTermsById = async (userId) => {
     const conn = await pool.getConnection();
     try {
         const [user] = await pool.query(
@@ -136,7 +144,8 @@ export const getUserTermsById = async (userId) => {
     }
 };
 
-export const setUserPreference = async (data) => {
+// 유저 선호 음식 수정
+export const updateUserPreference = async (data) => {
     const conn = await pool.getConnection();
     try {
         await pool.query(
@@ -153,7 +162,9 @@ export const setUserPreference = async (data) => {
         conn.release();
     }
 };
-export const getUserPreferencesByUserId = async (userId) => {
+
+// 유저 선호 음식 조회
+export const findUserPreferencesByUserId = async (userId) => {
     const conn = await pool.getConnection();
     try {
         const [preferences] = await pool.query(
@@ -175,7 +186,8 @@ export const getUserPreferencesByUserId = async (userId) => {
     }
 };
 
-export const setUserStatus = async (data) => {
+// 유저 상태 수정
+export const updateUserStatus = async (data) => {
     const conn = await pool.getConnection();
     try {
         await pool.query(
@@ -194,7 +206,9 @@ export const setUserStatus = async (data) => {
         conn.release();
     }
 };
-export const getUserStatusById = async (userId) => {
+
+// 유저 상태 조회
+export const findUserStatusById = async (userId) => {
     const conn = await pool.getConnection();
     try {
         const [user] = await pool.query(
@@ -211,7 +225,8 @@ export const getUserStatusById = async (userId) => {
     }
 };
 
-export const getAllUserById = async (userId) => {
+// 유저 전체 조회
+export const findAllUserById = async (userId) => {
     const conn = await pool.getConnection();
     try {
         const [user] = await pool.query(
@@ -234,7 +249,8 @@ export const getAllUserById = async (userId) => {
     }
 };
 
-export const getUserPreferenceByUserId = async (userId) => {
+// 유저 선호 음식 조회
+export const findUserPreferenceByUserId = async (userId) => {
     const conn = await pool.getConnection();
     try {
         const [preferences] = await pool.query(
@@ -256,7 +272,8 @@ export const getUserPreferenceByUserId = async (userId) => {
     }
 };
 
-export const addUserMission = async (data) => {
+// 유저 미션 생성
+export const createUserMission = async (data) => {
     const conn = await pool.getConnection();
     try {
         const [mission] = await pool.query(
@@ -281,7 +298,8 @@ export const addUserMission = async (data) => {
         conn.release();
     }
 }
-export const getUserMissionById = async (user_mission_id) => {
+// 유저 미션 조회
+export const findUserMissionById = async (user_mission_id) => {
     const conn = await pool.getConnection();
     try {
         const [mission] = await pool.query(

@@ -1,5 +1,6 @@
 import { pool } from "../db.config.js";
 
+// 리뷰 생성
 export const createReview = async (data) => {
     const conn = await pool.getConnection();
     try {
@@ -54,7 +55,8 @@ export const createReview = async (data) => {
     }
 };
 
-export const getReviewById = async (reviewId) => {
+// 리뷰 조회
+export const findReviewById = async (reviewId) => {
     const conn = await pool.getConnection();
     try {
         const [review] = await pool.query(
@@ -91,6 +93,7 @@ export const getReviewById = async (reviewId) => {
     }
 };
 
+// 미션 생성
 export const createMission = async (data) => {
     const conn = await pool.getConnection();
     try {
@@ -122,7 +125,9 @@ export const createMission = async (data) => {
         conn.release();
     }
 }
-export const getMissionById = async (missionId) => {
+
+// 미션 조회
+export const findMissionById = async (missionId) => {
     const conn = await pool.getConnection();
     try {
         const [mission] = await pool.query(

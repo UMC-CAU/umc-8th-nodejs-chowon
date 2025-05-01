@@ -1,16 +1,16 @@
 import {
-    addUser,
-    addUserMission,
-    getUserById,
-    getUserInfoById,
-    getUserMissionById,
-    getUserPreferencesByUserId,
-    getUserStatusById,
-    getUserTermsById,
-    setUserInfo,
-    setUserPreference,
-    setUserStatus,
-    setUserTerms,
+    createUser as createUserRepository,
+    findUserById,
+    findUserInfoById,
+    findUserMissionById,
+    findUserPreferencesByUserId,
+    findUserStatusById,
+    findUserTermsById,
+    updateUserInfo as updateUserInfoRepository,
+    updateUserPreference,
+    updateUserStatus,
+    updateUserTerms as updateUserTermsRepository,
+    createUserMission,
 } from "../repositories/user.repository.js";
 import {
     UserResponseDto,
@@ -21,8 +21,8 @@ import {
     UserMissionResponseDto,
 } from "../dtos/response/user.dto.js";
 
-export const userSignUp = async (data) => {
-    const userId = await addUser({
+export const createUser = async (data) => {
+    const userId = await createUserRepository({
         email: data.email,
         socialType: data.socialType,
         socialId: data.socialId,
@@ -30,7 +30,7 @@ export const userSignUp = async (data) => {
     if (userId === null) {
         throw new Error("이미 존재하는 이메일입니다.");
     }
-    const user = await getUserById(userId);
+    const user = await findUserById(userId);
     return UserResponseDto(user);
 };
 
@@ -39,7 +39,7 @@ export const updateUserInfo = async (userId, data) => {
         throw new Error("유저 ID가 필요합니다.");
     }
 
-    await setUserInfo({
+    await updateUserInfoRepository({
         userId,
         name: data.name,
         gender: data.gender,
@@ -48,12 +48,12 @@ export const updateUserInfo = async (userId, data) => {
         detailAddress: data.detailAddress,
     });
 
-    const info = await getUserInfoById(userId);
+    const info = await findUserInfoById(userId);
     return UserInfoResponseDto(info);
 };
 
 export const updateUserTerms = async (userId, data) => {
-    await setUserTerms({
+    await updateUserTermsRepository({
         userId,
         serviceCheck: data.serviceCheck,
         privacyCheck: data.privacyCheck,
@@ -62,30 +62,30 @@ export const updateUserTerms = async (userId, data) => {
         ageCheck: data.ageCheck,
     });
 
-    const terms = await getUserTermsById(userId);
+    const terms = await findUserTermsById(userId);
     return UserTermsResponseDto(terms);
 };
 
 export const updateUserFoods = async (userId, data) => {
     for (const food_id of data.preferences) {
-        await setUserPreference({ userId, foodId: food_id });
+        await updateUserPreference({ userId, foodId: food_id });
     }
-    const preferences = await getUserPreferencesByUserId(userId);
+    const preferences = await findUserPreferencesByUserId(userId);
     return UserFoodsResponseDto(userId, preferences);
 };
 
-export const updateUserStatus = async (userId, data) => {
-    await setUserStatus({
+export const activateUser = async (userId, data) => {
+    await updateUserStatus({
         userId,
         status: data.status,
     });
 
-    const status = await getUserStatusById(userId);
+    const status = await findUserStatusById(userId);
     return UserStatusResponseDto(status);
 };
 
-export const addMission = async (userId, data) => {
-    const user_mission_id = await addUserMission({
+export const assignMissionToUser = async (userId, data) => {
+    const user_mission_id = await createUserMission({
         userId,
         missionId: data.missionId,
     });
@@ -93,6 +93,6 @@ export const addMission = async (userId, data) => {
         throw new Error("존재하지 않는 미션입니다.");
     }
 
-    const user_mission = await getUserMissionById(user_mission_id);
+    const user_mission = await findUserMissionById(user_mission_id);
     return UserMissionResponseDto(user_mission);
 }
