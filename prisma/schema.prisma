@@ -1,0 +1,239 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// users 테이블
+model User {
+  id             BigInt    @id @default(autoincrement())
+  name           String?   @db.VarChar(10)
+  gender         Boolean?
+  birth          DateTime? @db.Date
+  address        String?   @db.VarChar(40)
+  detailAddress  String?   @map("detail_address") @db.VarChar(40)
+  point          BigInt    @default(0)
+  email          String    @db.VarChar(255)
+  phoneNumber    String?   @map("phone_num") @db.VarChar(11)
+  marketingCheck Boolean   @default(false) @map("marketing_check")
+  locationCheck  Boolean   @default(false) @map("location_check")
+  serviceCheck   Boolean   @default(false) @map("service_check")
+  privacyCheck   Boolean   @default(false) @map("privacy_check")
+  ageCheck       Boolean   @default(false) @map("age_check")
+  status         Boolean   @default(false)
+  inactiveDate   DateTime? @map("inactive_date")
+  socialType     String    @map("social_type") @db.VarChar(20)
+  socialId       String    @map("social_id") @db.VarChar(50)
+  nickname       String?   @db.VarChar(50)
+  createdAt      DateTime  @default(now()) @map("created_at") @db.DateTime(6)
+  updatedAt      DateTime  @default(now()) @updatedAt @map("updated_at") @db.DateTime(6)
+
+  // Relations
+  pointHistories     PointHistory[]
+  userFoodCategories UserFoodCategory[]
+  reviews            Review[]
+  userMissions       UserMission[]
+
+  @@map("users")
+}
+
+// food_category 테이블
+model FoodCategory {
+  id        BigInt   @id @default(autoincrement())
+  name      String   @unique @db.VarChar(10)
+  createdAt DateTime @default(now()) @map("created_at") @db.DateTime(6)
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.DateTime(6)
+
+  // Relations
+  userFoodCategories UserFoodCategory[]
+  shops              Shop[]
+
+  @@map("food_category")
+}
+
+// user_food_category 테이블
+model UserFoodCategory {
+  id             BigInt   @id @default(autoincrement())
+  foodCategoryId BigInt   @map("food_id")
+  userId         BigInt   @map("user_id")
+  createdAt      DateTime @default(now()) @map("created_at") @db.DateTime(6)
+  updatedAt      DateTime @default(now()) @updatedAt @map("updated_at") @db.DateTime(6)
+
+  // Relations
+  user         User         @relation(fields: [userId], references: [id])
+  foodCategory FoodCategory @relation(fields: [foodCategoryId], references: [id])
+
+  @@index([foodCategoryId], name: "f_category_id")
+  @@index([userId], map: "user_id")
+  @@map("user_food_category")
+}
+
+enum PointType {
+  Use
+  Add
+}
+
+// point_history 테이블
+model PointHistory {
+  id        BigInt    @id @default(autoincrement())
+  amount    BigInt    @default(0)
+  pointType PointType @default(Add) @map("point_type")
+  userId    BigInt    @map("user_id")
+  date      DateTime  @db.Date
+  createdAt DateTime  @default(now()) @map("created_at") @db.DateTime(6)
+  updatedAt DateTime  @default(now()) @updatedAt @map("updated_at") @db.DateTime(6)
+
+  // Relations
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("point_history")
+}
+
+// owner 테이블
+model Owner {
+  id            BigInt    @id @default(autoincrement())
+  name          String    @db.VarChar(10)
+  gender        Boolean
+  birth         DateTime  @db.Date
+  address       String    @db.Text
+  detailAddress String    @map("detail_address") @db.Text
+  email         String?   @unique @db.VarChar(255)
+  phoneNum      String    @unique @map("phone_num") @db.VarChar(11)
+  status        Boolean   @default(true) @map("status")
+  inactiveDate  DateTime? @map("inactive_date")
+  socialType    String?   @map("social_type") @db.VarChar(20)
+  createdAt     DateTime  @default(now()) @map("created_at") @db.DateTime(6)
+  updatedAt     DateTime  @default(now()) @updatedAt @map("updated_at") @db.DateTime(6)
+
+  // Relations
+  shops Shop[]
+
+  @@map("owner")
+}
+
+// user_mission 테이블
+model UserMission {
+  id         BigInt    @id @default(autoincrement())
+  status     Boolean   @default(false)
+  missionId  BigInt    @map("mission_id")
+  userId     BigInt    @map("user_id")
+  finishDate DateTime? @map("finish_date")
+  createdAt  DateTime  @default(now()) @map("created_at") @db.DateTime(6)
+  updatedAt  DateTime  @default(now()) @updatedAt @map("updated_at") @db.DateTime(6)
+
+  // Relations
+  mission Mission @relation(fields: [missionId], references: [id])
+  user   User    @relation(fields: [userId], references: [id])
+
+  @@map("user_mission")
+}
+
+// mission 테이블
+model Mission {
+  id             BigInt   @id @default(autoincrement())
+  shopId         BigInt   @map("shop_id")
+  point          BigInt
+  priceCriterion BigInt   @map("price_criterion")
+  dueDate        DateTime @map("due_date")
+  createdAt      DateTime @default(now()) @map("created_at") @db.DateTime(6)
+  updatedAt      DateTime @default(now()) @updatedAt @map("updated_at") @db.DateTime(6)
+
+  // Relations
+  shop         Shop          @relation(fields: [shopId], references: [id])
+  userMissions UserMission[]
+
+  @@map("mission")
+}
+
+// review 테이블
+model Review {
+  id        BigInt   @id @default(autoincrement())
+  shopId    BigInt   @map("shop_id")
+  userId    BigInt   @map("user_id")
+  body      String   @db.Text
+  score     Float
+  createdAt DateTime @default(now()) @map("created_at") @db.DateTime(6)
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.DateTime(6)
+
+  // Relations
+  shop         Shop          @relation(fields: [shopId], references: [id])
+  user         User          @relation(fields: [userId], references: [id])
+  reviewImages ReviewImage[]
+
+  @@map("review")
+}
+
+// review_image 테이블
+model ReviewImage {
+  id        BigInt   @id @default(autoincrement())
+  imageUrl  String   @map("image_url") @db.Text
+  reviewId  BigInt   @map("review_id")
+  createdAt DateTime @default(now()) @map("created_at") @db.DateTime(6)
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.DateTime(6)
+
+  // Relations
+  review Review @relation(fields: [reviewId], references: [id])
+
+  @@map("review_image")
+}
+
+// shop 테이블
+model Shop {
+  id             BigInt   @id @default(autoincrement())
+  name           String   @db.VarChar(20)
+  rate           Float?
+  address        String   @db.VarChar(20)
+  status         Boolean  @default(true)
+  foodCategoryId BigInt   @map("food_category_id")
+  ownerId        BigInt   @map("owner_id")
+  regionId       BigInt   @map("region_id")
+  createdAt      DateTime @default(now()) @map("created_at") @db.DateTime(6)
+  updatedAt      DateTime @default(now()) @updatedAt @map("updated_at") @db.DateTime(6)
+
+  // Relations
+  region       Region       @relation(fields: [regionId], references: [id])
+  foodCategory FoodCategory @relation(fields: [foodCategoryId], references: [id])
+  owner        Owner        @relation(fields: [ownerId], references: [id])
+  missions     Mission[]
+  reviews      Review[]
+  shopImages   ShopImage[]
+
+  @@map("shop")
+}
+
+// shop_image 테이블
+model ShopImage {
+  id        BigInt   @id @default(autoincrement())
+  imageUrl  String   @map("image_url") @db.Text
+  shopId    BigInt   @map("shop_id")
+  createdAt DateTime @default(now()) @map("created_at") @db.DateTime(6)
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.DateTime(6)
+
+  // Relations
+  shop Shop @relation(fields: [shopId], references: [id])
+
+  @@map("shop_image")
+}
+
+// region 테이블
+model Region {
+  id        BigInt   @id @default(autoincrement())
+  name      String   @unique @db.VarChar(20)
+  createdAt DateTime @default(now()) @map("created_at") @db.DateTime(6)
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.DateTime(6)
+
+  // Relations
+  shops Shop[]
+
+  @@map("region")
+}

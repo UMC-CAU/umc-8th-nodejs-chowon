@@ -2,6 +2,9 @@
 .vscode
 ca.pem
 
+# 생성된 Prisma 파일들
+src/generated/prisma
+
 # Created by https://www.toptal.com/developers/gitignore/api/node
 # Edit at https://www.toptal.com/developers/gitignore?templates=node
 

@@ -1,49 +1,59 @@
 import { pool } from "../db.config.js";
+import { prisma } from "../db.config.js";
 
 // 기본 비활성 유저 생성 (email, password)
 export const createUser = async (data) => {
-    const conn = await pool.getConnection();
-    try {
-        const [confirm] = await pool.query(
-            `SELECT EXISTS(SELECT 1 FROM users WHERE email = ?) as isExistEmail`,
-            data.email
-        );
-        if (confirm[0].isExistEmail) {
-            return null;
-        }
-
-        const [result] = await pool.query(
-            `INSERT INTO users (email, social_type, social_id) VALUES (?, ?, ?)`,
-            [data.email, data.socialType, data.socialId]
-        );
-        return result.insertId;
-    } catch (err) {
-        throw new Error(
-            `2오류가 발생했습니다. 요청 파라미터를 확인해주세요. (${err})`
-        );
-    } finally {
-        conn.release();
+    const user = await prisma.user.findFirst({ where: { email: data.email } });
+    if (user) {
+        return null;
     }
+    const created = await prisma.user.create({ data: data });
+    return created.id;
+
+    // const conn = await pool.getConnection();
+    // try {
+    //     const [confirm] = await pool.query(
+    //         `SELECT EXISTS(SELECT 1 FROM users WHERE email = ?) as isExistEmail`,
+    //         data.email
+    //     );
+    //     if (confirm[0].isExistEmail) {
+    //         return null;
+    //     }
+
+    //     const [result] = await pool.query(
+    //         `INSERT INTO users (email, social_type, social_id) VALUES (?, ?, ?)`,
+    //         [data.email, data.socialType, data.socialId]
+    //     );
+    //     return result.insertId;
+    // } catch (err) {
+    //     throw new Error(
+    //         `2오류가 발생했습니다. 요청 파라미터를 확인해주세요. (${err})`
+    //     );
+    // } finally {
+    //     conn.release();
+    // }
 };
 
 // 유저 조회
 export const findUserById = async (userId) => {
-    const conn = await pool.getConnection();
-    try {
-        const [user] = await pool.query(
-            `SELECT email, social_type, social_id, id
-            FROM users
-            WHERE id = ?`,
-            [userId]
-        );
-        return user.length > 0 ? user[0] : null;
-    } catch (err) {
-        throw new Error(
-            `1오류가 발생했습니다. 요청 파라미터를 확인해주세요. (${err})`
-        );
-    } finally {
-        conn.release();
-    }
+    const user = await prisma.user.findFirstOrThrow({ where: { id: userId } });
+    return user;
+    // const conn = await pool.getConnection();
+    // try {
+    //     const [user] = await pool.query(
+    //         `SELECT email, social_type, social_id, id
+    //         FROM users
+    //         WHERE id = ?`,
+    //         [userId]
+    //     );
+    //     return user.length > 0 ? user[0] : null;
+    // } catch (err) {
+    //     throw new Error(
+    //         `1오류가 발생했습니다. 요청 파라미터를 확인해주세요. (${err})`
+    //     );
+    // } finally {
+    //     conn.release();
+    // }
 };
 
 // 유저 정보 수정
@@ -146,44 +156,63 @@ export const findUserTermsById = async (userId) => {
 
 // 유저 선호 음식 수정
 export const updateUserPreference = async (data) => {
-    const conn = await pool.getConnection();
-    try {
-        await pool.query(
-            `
-            INSERT INTO user_food_category (user_id, food_id) VALUES (?, ?)`,
-            [data.userId, data.foodId]
-        );
-        return;
-    } catch (err) {
-        throw new Error(
-            `오류가 발생했습니다. 요청 파라미터를 확인해주세요. (${err})`
-        );
-    } finally {
-        conn.release();
-    }
+    await prisma.userFoodCategory.create({
+        data: {
+            userId: data.userId,
+            foodCategoryId: data.foodId,
+        },
+    });
+    // const conn = await pool.getConnection();
+    // try {
+    //     await pool.query(
+    //         `
+    //         INSERT INTO user_food_category (user_id, food_id) VALUES (?, ?)`,
+    //         [data.userId, data.foodId]
+    //     );
+    //     return;
+    // } catch (err) {
+    //     throw new Error(
+    //         `오류가 발생했습니다. 요청 파라미터를 확인해주세요. (${err})`
+    //     );
+    // } finally {
+    //     conn.release();
+    // }
 };
 
 // 유저 선호 음식 조회
 export const findUserPreferencesByUserId = async (userId) => {
-    const conn = await pool.getConnection();
-    try {
-        const [preferences] = await pool.query(
-            `
-            SELECT fc.id, fc.name
-            FROM user_food_category ufc
-            JOIN food_category fc ON ufc.food_id = fc.id
-            WHERE ufc.user_id = ?`,
-            [userId]
-        );
-        console.log(preferences)
-        return preferences;
-    } catch (err) {
-        throw new Error(
-            `오류가 발생했습니다. 요청 파라미터를 확인해주세요. (${err})`
-        );
-    } finally {
-        conn.release();
-    }
+    const preferences = await prisma.userFoodCategory.findMany({
+        select: {
+            id: true,
+            userId: true,
+            foodCategoryId: true,
+            foodCategory: true,
+        },
+        where: {
+            userId: userId,
+        },
+        orderBy: { foodCategoryId: "asc" },
+    });
+    return preferences;
+    // const conn = await pool.getConnection();
+    // try {
+    //     const [preferences] = await pool.query(
+    //         `
+    //         SELECT fc.id, fc.name
+    //         FROM user_food_category ufc
+    //         JOIN food_category fc ON ufc.food_id = fc.id
+    //         WHERE ufc.user_id = ?`,
+    //         [userId]
+    //     );
+    //     console.log(preferences);
+    //     return preferences;
+    // } catch (err) {
+    //     throw new Error(
+    //         `오류가 발생했습니다. 요청 파라미터를 확인해주세요. (${err})`
+    //     );
+    // } finally {
+    //     conn.release();
+    // }
 };
 
 // 유저 상태 수정
@@ -229,10 +258,9 @@ export const findUserStatusById = async (userId) => {
 export const findAllUserById = async (userId) => {
     const conn = await pool.getConnection();
     try {
-        const [user] = await pool.query(
-            `SELECT * FROM users WHERE id = ?`,
-            [userId]
-        );
+        const [user] = await pool.query(`SELECT * FROM users WHERE id = ?`, [
+            userId,
+        ]);
         console.log(user);
 
         if (user.length == 0) {
@@ -297,7 +325,7 @@ export const createUserMission = async (data) => {
     } finally {
         conn.release();
     }
-}
+};
 // 유저 미션 조회
 export const findUserMissionById = async (user_mission_id) => {
     const conn = await pool.getConnection();

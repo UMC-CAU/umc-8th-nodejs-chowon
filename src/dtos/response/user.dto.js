@@ -30,9 +30,10 @@ export const UserTermsResponseDto = (user) => {
 }
 
 export const UserFoodsResponseDto = (userId, preferences) => {
+    const preferFoods = preferences.map((preference) => preference.foodCategory.name);
     return {
         id: userId,
-        preferences,
+        preferCategory: preferFoods,
     };
 };
 

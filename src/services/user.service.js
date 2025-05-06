@@ -22,14 +22,25 @@ import {
 } from "../dtos/response/user.dto.js";
 
 export const createUser = async (data) => {
+    // 필수 필드 유효성 검사
+    if (!data.email) {
+        throw new Error("이메일은 필수입니다.");
+    }
+    
+    if (!data.socialType) {
+        throw new Error("소셜 타입은 필수입니다.");
+    }
+    
     const userId = await createUserRepository({
         email: data.email,
         socialType: data.socialType,
-        socialId: data.socialId,
+        socialId: data.socialId || "",
     });
+    
     if (userId === null) {
         throw new Error("이미 존재하는 이메일입니다.");
     }
+    
     const user = await findUserById(userId);
     return UserResponseDto(user);
 };
