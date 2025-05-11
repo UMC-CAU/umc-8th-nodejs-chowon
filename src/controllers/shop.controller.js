@@ -26,7 +26,18 @@ const createReviewByShopId = async (req, res) => {
     }
 }
 
+const getReviewsByShopId = async (req, res, next) => {
+    console.log("가게 리뷰 조회 중...");
+    try {
+        const reviews = await findReviewsByShopId(req.params.shop_id);
+        res.status(StatusCodes.OK).json({ result: reviews });
+    } catch (error) {
+        res.status(StatusCodes.BAD_REQUEST).json({ message: error.message });
+    }
+}
+
 export const shopController = {
     createMissionByShopId,
     createReviewByShopId,
+    getReviewsByShopId
 }
