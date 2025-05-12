@@ -24,6 +24,7 @@ const signupUser = async (req, res) => {
     try {
         const userDto = CreateUserDto(req.body);
         const user = await createUser(userDto);
+        console.log(user, typeof user);
         res.status(StatusCodes.OK).json({ result: user });
     } catch (error) {
         res.status(StatusCodes.BAD_REQUEST).json({ message: error.message });

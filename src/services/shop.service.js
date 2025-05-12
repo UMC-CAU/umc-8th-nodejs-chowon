@@ -33,3 +33,8 @@ export const createMission = async (shopId, missionDto) => {
     console.log(mission);
     return MissionResponseDto(mission);
 };
+
+export const findReviewsByShopId = async (shopId) => {
+    const reviews = await findReviewById(shopId);
+    return reviews.map((review) => ReviewResponseDto(review));
+}

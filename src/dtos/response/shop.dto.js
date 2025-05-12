@@ -1,8 +1,8 @@
 export const ReviewResponseDto = (body) => {
     return {
-        id: body.id,
-        userId: body.user_id,
-        shopId: body.shop_id,
+        id: String(body.id),
+        userId: String(body.user_id),
+        shopId: String(body.shop_id),
         body: body.body,
         score: body.score,
         images: Array.isArray(body.images) ? body.images : [],
@@ -11,11 +11,10 @@ export const ReviewResponseDto = (body) => {
     }
 }
 
-
 export const MissionResponseDto = (body) => {
     return {
-        id: body.id,
-        shopId: body.shop_id,
+        id: String(body.id),
+        shopId: String(body.shop_id),
         point: body.point,
         priceCriterion: body.price_criterion,
         dueDate: body.due_date,
