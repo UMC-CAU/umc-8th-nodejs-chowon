@@ -5,6 +5,8 @@ import { signupController, userController } from "./controllers/user.controller.
 import { regionController } from "./controllers/region.controller.js";
 import { shopController } from "./controllers/shop.controller.js";
 
+import { responseHandler, errorHandler } from "./utils/response.util.js";
+
 dotenv.config();
 const app = express();
 const port = process.env.PORT || 3000;
@@ -20,6 +22,7 @@ app.use(cors());
 app.use(express.static("public")); // 정적 파일을 제공하는 미들웨어 설정
 app.use(express.json()); // JSON 형식의 요청 본문을 파싱하는 미들웨어 설정
 app.use(express.urlencoded({ extended: true })); // URL 인코딩 형식의 요청 본문을 파싱하는 미들웨어 설정
+app.use(responseHandler);
 
 app.get("/", (req, res) => {
     res.send("Hello World!");
@@ -47,6 +50,8 @@ router.use("/auth", authRouter);
 router.use("/regions", regionsRouter);
 router.use("/shops", shopsRouter);
 app.use("/api/v1", router);
+
+app.use(errorHandler);
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`);

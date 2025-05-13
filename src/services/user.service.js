@@ -20,6 +20,7 @@ import {
     UserTermsResponseDto,
     UserMissionResponseDto,
 } from "../dtos/response/user.dto.js";
+import { DuplicateUserEmailError } from "../utils/error.util.js";
 
 export const createUser = async (data) => {
     // 필수 필드 유효성 검사
@@ -38,7 +39,7 @@ export const createUser = async (data) => {
     });
     
     if (userId === null) {
-        throw new Error("이미 존재하는 이메일입니다.");
+        throw new DuplicateUserEmailError("이미 존재하는 이메일입니다.", data);
     }
     
     const user = await findUserById(userId);
