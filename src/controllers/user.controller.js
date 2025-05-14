@@ -25,9 +25,18 @@ const signupUser = async (req, res) => {
         const userDto = CreateUserDto(req.body);
         const user = await createUser(userDto);
         console.log(user, typeof user);
-        res.sendSuccess(data=user);
+        res.sendSuccess(
+            StatusCodes.CREATED,
+            "회원가입이 성공적으로 완료되었습니다.",
+            user
+        );
     } catch (error) {
-        res.status(StatusCodes.BAD_REQUEST).json({ message: error.message });
+        res.sendError(
+            StatusCodes.BAD_REQUEST,
+            "회원가입에 실패했습니다.",
+            error,
+            req.body
+        );
     }
 };
 
@@ -39,9 +48,18 @@ const updateSignupInfo = async (req, res) => {
         const userId = req.body.id;
         const userInfoDto = UpdateUserInfoDto(req.body);
         const result = await updateUserInfo(userId, userInfoDto);
-        res.status(StatusCodes.OK).json({ result });
+        res.sendSuccess(
+            StatusCodes.OK,
+            "회원 정보가 성공적으로 업데이트되었습니다.",
+            result
+        );
     } catch (error) {
-        res.status(StatusCodes.BAD_REQUEST).json({ message: error.message });
+        res.sendError(
+            StatusCodes.BAD_REQUEST,
+            "회원 정보 업데이트에 실패했습니다.",
+            error,
+            req.body
+        );
     }
 };
 
@@ -53,9 +71,18 @@ const updateSignupTerms = async (req, res) => {
         const userId = req.body.id;
         const userTermsDto = UpdateUserTermsDto(req.body);
         const result = await updateUserTerms(userId, userTermsDto);
-        res.status(StatusCodes.OK).json({ result });
+        res.sendSuccess(
+            StatusCodes.OK,
+            "약관 동의가 성공적으로 업데이트되었습니다.",
+            result
+        );
     } catch (error) {
-        res.status(StatusCodes.BAD_REQUEST).json({ message: error.message });
+        res.sendError(
+            StatusCodes.BAD_REQUEST,
+            "약관 동의 업데이트에 실패했습니다.",
+            error,
+            req.body
+        );
     }
 };
 
@@ -67,9 +94,18 @@ const updateSignupFoods = async (req, res) => {
         const userId = req.body.id;
         const userFoodsDto = UpdateUserFoodsDto(req.body);
         const result = await updateUserFoods(userId, userFoodsDto);
-        res.status(StatusCodes.OK).json({ result });
+        res.sendSuccess(
+            StatusCodes.OK,
+            "선호 음식이 성공적으로 업데이트되었습니다.",
+            result
+        );
     } catch (error) {
-        res.status(StatusCodes.BAD_REQUEST).json({ message: error.message });
+        res.sendError(
+            StatusCodes.BAD_REQUEST,
+            "선호 음식 업데이트에 실패했습니다.",
+            error,
+            req.body
+        );
     }
 };
 
@@ -81,9 +117,18 @@ const updateSignupStatus = async (req, res) => {
         const userId = req.body.id;
         const userStatusDto = UpdateUserStatusDto(req.body);
         const result = await activateUser(userId, userStatusDto);
-        res.status(StatusCodes.OK).json({ result });
+        res.sendSuccess(
+            result,
+            "회원 상태가 성공적으로 업데이트되었습니다.",
+            StatusCodes.OK
+        );
     } catch (error) {
-        res.status(StatusCodes.BAD_REQUEST).json({ message: error.message });
+        res.sendError(
+            StatusCodes.BAD_REQUEST,
+            "회원 상태 업데이트에 실패했습니다.",
+            error,
+            req.body
+        );
     }
 };
 
@@ -101,12 +146,21 @@ const createUserMission = async (req, res) => {
     try {
         const missionDto = AddMissionDto(req.body);
         const mission = await assignMissionToUser(userId, missionDto);
-        res.status(StatusCodes.OK).json({ result: mission });
+        res.sendSuccess(
+            mission,
+            "미션이 성공적으로 추가되었습니다.",
+            StatusCodes.OK
+        );
     } catch (error) {
-        res.status(StatusCodes.BAD_REQUEST).json({ message: error.message });
+        res.sendError(
+            StatusCodes.BAD_REQUEST,
+            "미션 추가에 실패했습니다.",
+            error,
+            req.body
+        );
     }
 };
 
 export const userController = {
     addMissionToUser: createUserMission,
-}
+};

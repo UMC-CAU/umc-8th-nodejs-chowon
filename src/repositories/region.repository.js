@@ -1,105 +1,64 @@
-import { pool } from "../db.config.js";
+import { prisma } from "../db.config.js"; // prisma import 확인
+import { InvalidParameterError } from "../utils/error.util.js";
 
 // 가게 생성 (region_id)
 export const createShop = async (data) => {
-    // const conn = await pool.getConnection();
-    // try {
-    //     const [shop] = await pool.query(
-    //         `
-    //         SELECT EXISTS(SELECT 1 FROM shop WHERE name = ?) as isExistShop`,
-    //         data.name
-    //     );
-    //     if (shop[0].isExistShop) {
-    //         return null;
-    //     }
-
-    //     const [result] = await pool.query(
-    //         `INSERT INTO shop (name, address, food_category_id, owner_id, region_id, status, rate, created_at, updated_at)
-    //         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-    //         [
-    //             data.name,
-    //             data.address,
-    //             data.foodCategoryId,
-    //             data.ownerId,
-    //             data.regionId,
-    //             data.status,
-    //             data.rate,
-    //             data.createdAt,
-    //             data.updatedAt,
-    //         ]
-    //     );
-    //     return result.insertId;
-    // } catch (err) {
-    //     throw new Error(
-    //         `오류가 발생했습니다. 요청 파라미터를 확인해주세요. (${err})`
-    //     );
-    // } finally {
-    //     conn.release();
-    // }
-    const shop = await prisma.shop.create({
-        data: {
-            name: data.name,
-            address: data.address,
-            foodCategoryId: data.foodCategoryId,
-            ownerId: data.ownerId,
-            regionId: data.regionId,
-            status: data.status,
-            rate: data.rate,
-            createdAt: data.createdAt,
-            updatedAt: data.updatedAt,
-        },
-    });
-    return shop.id;
+    try {
+        const shop = await prisma.shop.create({
+            data: {
+                name: data.name,
+                address: data.address,
+                foodCategoryId: data.foodCategoryId,
+                ownerId: data.ownerId,
+                regionId: data.regionId,
+                status: data.status,
+                rate: data.rate,
+                createdAt: data.createdAt,
+                updatedAt: data.updatedAt,
+            },
+        });
+        return shop.id;
+    } catch (err) {
+        // Prisma 에러 코드 등을 활용하여 더 구체적인 에러를 throw 할 수 있습니다.
+        // 예를 들어, 고유 제약 조건 위반 시 DuplicateShopNameError 등을 정의하고 사용할 수 있습니다.
+        throw new InvalidParameterError(
+            `가게 생성 중 오류가 발생했습니다. (${err.message})`
+        );
+    }
 };
 
 // 가게 조회
 export const findShopById = async (shopId) => {
-    // const conn = await pool.getConnection();
-    // try {
-    //     const [shop] = await pool.query(
-    //         `SELECT id, name, address, food_category_id, owner_id, region_id, status, rate, created_at, updated_at
-    //         FROM shop
-    //         WHERE id = ?`,
-    //         [shopId]
-    //     );
-    //     return shop.length > 0 ? shop[0] : null;
-    // } catch (err) {
-    //     throw new Error(
-    //         `오류가 발생했습니다. 요청 파라미터를 확인해주세요. (${err})`
-    //     );
-    // } finally {
-    //     conn.release();
-    // }
-    const shop = await prisma.shop.findUnique({
-        where: {
-            id: shopId,
-        },
-    });
-    return shop;
+    try {
+        const shop = await prisma.shop.findUnique({
+            where: {
+                id: shopId,
+            },
+        });
+        // shop이 null일 경우, 여기서 NotFoundError 등을 throw 할 수 있습니다.
+        // service 계층에서 처리할 수도 있습니다.
+        return shop;
+    } catch (err) {
+        throw new InvalidParameterError(
+            `가게 조회 중 오류가 발생했습니다. (${err.message})`
+        );
+    }
 };
 
 // 지역 조회
 export const findRegionById = async (regionId) => {
-    // const conn = await pool.getConnection();
-    // try {
-    //     const [region] = await pool.query(
-    //         `SELECT id, name, created_at, updated_at
-    //         FROM region
-    //         WHERE id = ?`,
-    //         [regionId]
-    //     );
-    //     return region.length > 0 ? region[0] : null;
-    // } catch (err) {
-    //     throw new Error(
-    //         `오류가 발생했습니다. 요청 파라미터를 확인해주세요. (${err})`
-    //     );
-    // } finally {
-    //     conn.release();
-    // }
-    const region = await prisma.region.findUnique({
-        where: {
-            id: regionId,
-        },
-    });
-    return region;
+    try {
+        const region = await prisma.region.findUnique({
+            where: {
+                id: regionId,
+            },
+        });
+        // region이 null일 경우, 여기서 NotFoundError 등을 throw 할 수 있습니다.
+        // service 계층에서 처리할 수도 있습니다.
+        return region;
+    } catch (err) {
+        throw new InvalidParameterError(
+            `지역 조회 중 오류가 발생했습니다. (${err.message})`
+        );
+    }
 };

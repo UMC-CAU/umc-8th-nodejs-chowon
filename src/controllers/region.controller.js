@@ -7,10 +7,19 @@ const createShopByRegionId = async (req, res) => {
     const regionId = req.params.region_id;
     try {
         const shopDto = CreateShopDto(req.body);
-        const user = await createShop(regionId, shopDto);
-        res.status(StatusCodes.OK).json({ result: user });
+        const shop = await createShop(regionId, shopDto);
+        res.sendSuccess(
+            StatusCodes.OK,
+            "가게 생성이 성공적으로 완료되었습니다.",
+            shop
+        );
     } catch (error) {
-        res.status(StatusCodes.BAD_REQUEST).json({ message: error.message });
+        res.sendError(
+            StatusCodes.BAD_REQUEST,
+            "가게 생성에 실패했습니다.",
+            error,
+            req.body
+        );
     }
 };
 

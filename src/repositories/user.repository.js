@@ -1,4 +1,5 @@
 import { prisma } from "../db.config.js";
+import { AlreadyInProgressMissionError, InvalidParameterError, MissionQueryError, MissionUpdateError } from "../utils/error.util.js";
 
 // 기본 비활성 유저 생성 (email, password)
 export const createUser = async (data) => {
@@ -36,7 +37,7 @@ export const updateUserInfo = async (data) => {
         });
         return user;
     } catch (err) {
-        throw new Error(`유저 정보 업데이트에 실패했습니다. : ${err}`);
+        throw new InvalidParameterError(`유저 정보 업데이트에 실패했습니다. : ${err.message}`);
     }
 };
 
@@ -61,7 +62,7 @@ export const findUserInfoById = async (userId) => {
         }
         return user;
     } catch (err) {
-        throw new Error(`유저 정보 조회에 실패했습니다. : ${err}`);
+        throw new InvalidParameterError(`유저 정보 조회에 실패했습니다. : ${err.message}`);
     }
 };
 
@@ -80,7 +81,7 @@ export const updateUserTerms = async (data) => {
         });
         return user;
     } catch (err) {
-        throw new Error(`유저 약관 동의 업데이트에 실패했습니다. : ${err}`);
+        throw new InvalidParameterError(`유저 약관 동의 업데이트에 실패했습니다. : ${err.message}`);
     }
 };
 
@@ -103,7 +104,7 @@ export const findUserTermsById = async (userId) => {
         }
         return user;
     } catch (err) {
-        throw new Error(`유저 약관 동의 조회에 실패했습니다. : ${err}`);
+        throw new InvalidParameterError(`유저 약관 동의 조회에 실패했습니다. : ${err.message}`);
     }
 };
 
@@ -117,7 +118,7 @@ export const updateUserPreference = async (data) => {
             },
         });
     } catch (err) {
-        throw new Error(`유저 선호 음식 업데이트에 실패했습니다. : ${err}`);
+        throw new InvalidParameterError(`유저 선호 음식 업데이트에 실패했습니다. : ${err.message}`);
     }
 };
 
@@ -138,8 +139,8 @@ export const findUserPreferencesByUserId = async (userId) => {
         });
         return preferences;
     } catch (err) {
-        throw new Error(
-            `오류가 발생했습니다. 요청 파라미터를 확인해주세요. (${err})`
+        throw new InvalidParameterError(
+            `오류가 발생했습니다. 요청 파라미터를 확인해주세요. (${err.message})`
         );
     }
 };
@@ -151,7 +152,7 @@ export const updateUserStatus = async (data) => {
         data: { status: data.status },
     });
     if (!user) {
-        throw new Error("유저 상태 업데이트에 실패했습니다.");
+        throw new InvalidParameterError("유저 상태 업데이트에 실패했습니다.");
     }
     return user;
 };
@@ -206,12 +207,15 @@ export const findUserPreferenceByUserId = async (userId) => {
             },
         });
         if (!preferences) {
-            throw new Error("유저 선호 음식 조회에 실패했습니다.");
+            throw new InvalidParameterError("유저 선호 음식 조회에 실패했습니다.");
         }
         return preferences;
     } catch (err) {
-        throw new Error(
-            `오류가 발생했습니다. 요청 파라미터를 확인해주세요. (${err})`
+        if (err instanceof InvalidParameterError) {
+            throw err;
+        }
+        throw new InvalidParameterError(
+            `오류가 발생했습니다. 요청 파라미터를 확인해주세요. (${err.message})`
         );
     }
 };
@@ -224,7 +228,7 @@ export const createUserMission = async (data) => {
         });
         // 미션이 존재하지 않을 경우 에러 발생
         if (!isExistMission) {
-            throw new Error("존재하지 않는 미션입니다.");
+            throw new MissionNotFoundError("존재하지 않는 미션입니다.");
         }
 
         // 이미 진행 중인 미션인지 확인
@@ -235,7 +239,7 @@ export const createUserMission = async (data) => {
             },
         });
         if (existingUserMission) {
-            throw new Error("이미 진행 중인 미션입니다.");
+            throw new AlreadyInProgressMissionError("이미 진행 중인 미션입니다.");
         }
 
         const user_mission = await prisma.userMission.create({
@@ -245,11 +249,14 @@ export const createUserMission = async (data) => {
             },
         });
         if (!user_mission) {
-            throw new Error("미션 생성에 실패했습니다.");
+            throw new MissionUpdateError("미션 생성에 실패했습니다."); // MissionCreationError가 없으므로 MissionUpdateError로 대체
         }
         return user_mission.id;
     } catch (err) {
-        throw new Error(`미션 생성 중 오류가 발생했습니다. (${err})`);
+        if (err instanceof MissionNotFoundError || err instanceof AlreadyInProgressMissionError || err instanceof MissionUpdateError) {
+            throw err;
+        }
+        throw new MissionUpdateError(`미션 생성 중 오류가 발생했습니다. (${err.message})`); // MissionCreationError가 없으므로 MissionUpdateError로 대체
     }
 };
 
@@ -270,7 +277,7 @@ export const findUserMissionById = async (user_mission_id) => {
         });
         return mission;
     } catch (err) {
-        throw new Error(`미션 조회에 실패했습니다. (${err})`);
+        throw new MissionQueryError(`미션 조회에 실패했습니다. (${err.message})`);
     }
 };
 
@@ -290,7 +297,7 @@ export const findUserReviewsById = async (userId) => {
         });
         return reviews;
     } catch (err) {
-        throw new Error(`리뷰 조회 중 오류가 발생했습니다. (${err})`);
+        throw new InvalidParameterError(`리뷰 조회 중 오류가 발생했습니다. (${err.message})`);
     }
 };
 
@@ -311,11 +318,14 @@ export const findUserMissionsById = async (userId) => {
             },
         });
         if (!missions) {
-            throw new Error("미션 조회에 실패했습니다.");
+            throw new MissionQueryError("미션 조회에 실패했습니다.");
         }
         return missions;
     } catch (err) {
-        throw new Error(`미션 조회 중 오류가 발생했습니다. (${err})`);
+        if (err instanceof MissionQueryError) {
+            throw err;
+        }
+        throw new MissionQueryError(`미션 조회 중 오류가 발생했습니다. (${err.message})`);
     }
 };
 
@@ -328,6 +338,6 @@ export const updateUserMission = async (user_mission_id) => {
         });
         return mission;
     } catch (err) {
-        throw new Error(`미션 업데이트 중 오류가 발생했습니다. (${err})`);
+        throw new MissionUpdateError(`미션 업데이트 중 오류가 발생했습니다. (${err.message})`);
     }
 };

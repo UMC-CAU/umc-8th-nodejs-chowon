@@ -1,9 +1,9 @@
 import { StatusCodes } from "http-status-codes";
 class ApiResponse {
     static success(
-        data = null,
+        statusCode = StatusCodes.OK,
         message = "요청이 성공적으로 처리되었습니다.",
-        statusCode = StatusCodes.OK
+        data = null
     ) {
         return {
             status: "SUCCESS",
@@ -13,10 +13,10 @@ class ApiResponse {
         };
     }
     static error(
-        data = null,
-        message = "요청 처리 중 오류가 발생했습니다.",
         statusCode = StatusCodes.INTERNAL_SERVER_ERROR,
+        message = "요청 처리 중 오류가 발생했습니다.",
         error = null,
+        data = null
     ) {
         return {
             status: "FAIL",
@@ -31,22 +31,22 @@ class ApiResponse {
 export const responseHandler = (req, res, next) => {
     // 성공 응답을 위한 메서드
     res.sendSuccess = function (
-        data = null,
+        statusCode = StatusCodes.OK,
         message = "요청이 성공적으로 처리되었습니다.",
-        statusCode = StatusCodes.OK
+        data = null
     ) {
-        const response = ApiResponse.success(data, message, statusCode);
+        const response = ApiResponse.success(statusCode, message, data);
         return this.status(statusCode).json(response);
     };
 
     // 에러 응답을 위한 메서드
     res.sendError = function (
-        data = null,
-        message = "요청 처리 중 오류가 발생했습니다.",
         statusCode = StatusCodes.INTERNAL_SERVER_ERROR,
-        error = null
+        message = "요청 처리 중 오류가 발생했습니다.",
+        error = null,
+        data = null,
     ) {
-        const response = ApiResponse.error(data, message, statusCode, error);
+        const response = ApiResponse.error(statusCode, message, error, data);
         return this.status(statusCode).json(response);
     };
 

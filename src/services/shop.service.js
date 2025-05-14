@@ -3,14 +3,14 @@ import {
     ReviewResponseDto,
 } from "../dtos/response/shop.dto.js";
 import {
-    createMission,
-    createReview,
+    createMission as createMissionInDB,
+    createReview as createReviewInDB,
     findMissionById,
     findReviewById,
 } from "../repositories/shop.repository.js";
 
 export const createReview = async (shopId, reviewDto) => {
-    const reviewId = await createReview({
+    const reviewId = await createReviewInDB({
         shopId,
         userId: reviewDto.userId,
         body: reviewDto.body,
@@ -23,7 +23,7 @@ export const createReview = async (shopId, reviewDto) => {
 };
 
 export const createMission = async (shopId, missionDto) => {
-    const missionId = await createMission({
+    const missionId = await createMissionInDB({
         shopId,
         point: missionDto.point,
         priceCriterion: missionDto.priceCriterion,

@@ -1,5 +1,5 @@
-import { pool } from "../db.config.js";
-import { prisma } from "../prisma.config.js";
+import { prisma } from "../db.config.js";
+import { ReviewCreationError, ReviewImageCreationError, InvalidParameterError, MissionNotFoundError } from "../utils/error.util.js";
 
 // 리뷰 생성
 export const createReview = async (data) => {
@@ -10,7 +10,7 @@ export const createReview = async (data) => {
             },
         });
         if (!shop) {
-            throw new Error("가게를 찾을 수 없습니다.");
+            throw new InvalidParameterError("가게를 찾을 수 없습니다.");
         }
 
         const user = await prisma.user.findUnique({
@@ -19,10 +19,10 @@ export const createReview = async (data) => {
             },
         });
         if (!user) {
-            throw new Error("사용자를 찾을 수 없습니다.");
+            throw new InvalidParameterError("사용자를 찾을 수 없습니다.");
         }
         if (data.score < 1 || data.score > 5) {
-            throw new Error("점수는 1에서 5 사이여야 합니다.");
+            throw new InvalidParameterError("점수는 1에서 5 사이여야 합니다.");
         }
 
         const result = await prisma.review.create({
@@ -35,19 +35,10 @@ export const createReview = async (data) => {
                 updatedAt: new Date(),
             },
         });
-        if (!review) {
-            throw new Error("리뷰 생성에 실패했습니다.");
+        if (!result) {
+            throw new ReviewCreationError("리뷰 생성에 실패했습니다.");
         }
         const reviewId = result.id;
-
-        //     if (data.images && data.images.length > 0) {
-        //         const imageValues = data.images.map((image) => [reviewId, image]);
-        //         await pool.query(
-        //             `INSERT INTO review_image (review_id, image_url) VALUES ?`,
-        //             [imageValues]
-        //         );
-        //     }
-        //     return reviewId;
 
         if (data.images && data.images.length > 0) {
             const images = await prisma.reviewImage.createMany({
@@ -57,53 +48,22 @@ export const createReview = async (data) => {
                 })),
             });
             if (!images) {
-                throw new Error("리뷰 이미지를 생성하는데 실패했습니다.");
+                throw new ReviewImageCreationError("리뷰 이미지를 생성하는데 실패했습니다.");
             }
         }
         return reviewId;
     } catch (err) {
-        throw new Error(
-            `오류가 발생했습니다. 요청 파라미터를 확인해주세요. (${err})`
+        if (err instanceof InvalidParameterError || err instanceof ReviewCreationError || err instanceof ReviewImageCreationError) {
+            throw err;
+        }
+        throw new InvalidParameterError(
+            `오류가 발생했습니다. 요청 파라미터를 확인해주세요. (${err.message})`
         );
     }
 };
 
 // 리뷰 조회
 export const findReviewById = async (reviewId) => {
-    // const conn = await pool.getConnection();
-    // try {
-    //     const [review] = await pool.query(
-    //         `SELECT id, user_id, shop_id, body, score, created_at, updated_at
-    //         FROM review
-    //         WHERE id = ?`,
-    //         [reviewId]
-    //     );
-    //     let result = review[0];
-    //     if (review.length > 0) {
-    //         const [images] = await pool.query(
-    //             `SELECT id, image_url
-    //             FROM review_image
-    //             WHERE review_id = ?`,
-    //             [reviewId]
-    //         );
-    //         console.log("images", images);
-
-    //         if (images.length > 0) {
-    //             result.images = images.map((image) => image.image_url);
-    //         } else {
-    //             result.images = [];
-    //         }
-    //     } else {
-    //         result = null;
-    //     }
-    //     return result;
-    // } catch (err) {
-    //     throw new Error(
-    //         `오류가 발생했습니다. 요청 파라미터를 확인해주세요. (${err})`
-    //     );
-    // } finally {
-    //     conn.release();
-    // }
     const review = await prisma.review.findUnique({
         where: { id: reviewId },
         include: {
@@ -115,7 +75,7 @@ export const findReviewById = async (reviewId) => {
         },
     });
     if (!review) {
-        throw new Error("리뷰를 찾을 수 없습니다.");
+        throw new MissionNotFoundError("리뷰를 찾을 수 없습니다.");
     }
     const images = review.images.map((image) => image.imageUrl);
     return {
@@ -126,35 +86,6 @@ export const findReviewById = async (reviewId) => {
 
 // 미션 생성
 export const createMission = async (data) => {
-    // const conn = await pool.getConnection();
-    // try {
-    //     const [shop] = await pool.query(`SELECT id FROM shop WHERE id = ?`, [
-    //         data.shopId,
-    //     ]);
-    //     if (shop.length === 0) {
-    //         throw new Error("가게를 찾을 수 없습니다.");
-    //     }
-
-    //     const [result] = await pool.query(
-    //         `INSERT INTO mission (shop_id, point, price_criterion, due_date, created_at, updated_at)
-    //         VALUES (?, ?, ?, ?, ?, ?)`,
-    //         [
-    //             data.shopId,
-    //             data.point,
-    //             data.priceCriterion,
-    //             data.dueDate,
-    //             new Date(),
-    //             new Date(),
-    //         ]
-    //     );
-    //     return result.insertId;
-    // } catch (err) {
-    //     throw new Error(
-    //         `오류가 발생했습니다. 요청 파라미터를 확인해주세요. (${err})`
-    //     );
-    // } finally {
-    //     conn.release();
-    // }
     const mission = await prisma.mission.create({
         data: {
             shopId: data.shopId,
@@ -164,29 +95,13 @@ export const createMission = async (data) => {
         },
     });
     if (!mission) {
-        throw new Error("미션 생성에 실패했습니다.");
+        throw new ReviewCreationError("미션 생성에 실패했습니다.");
     }
     return mission.id;
 };
 
 // 미션 조회
 export const findMissionById = async (missionId) => {
-    // const conn = await pool.getConnection();
-    // try {
-    //     const [mission] = await pool.query(
-    //         `SELECT id, shop_id, point, price_criterion, due_date, created_at, updated_at
-    //         FROM mission
-    //         WHERE id = ?`,
-    //         [missionId]
-    //     );
-    //     return mission.length > 0 ? mission[0] : null;
-    // } catch (err) {
-    //     throw new Error(
-    //         `오류가 발생했습니다. 요청 파라미터를 확인해주세요. (${err})`
-    //     );
-    // } finally {
-    //     conn.release();
-    // }
     const mission = await prisma.mission.findUnique({
         where: { id: missionId },
         include: {
@@ -199,7 +114,7 @@ export const findMissionById = async (missionId) => {
         },
     });
     if (!mission) {
-        throw new Error("미션을 찾을 수 없습니다.");
+        throw new MissionNotFoundError("미션을 찾을 수 없습니다.");
     }
     return mission;
 };
@@ -234,7 +149,7 @@ export const findReviewByShopId = async (shopId) => {
         },
     });
     if (!reviews) {
-        throw new Error("리뷰를 찾을 수 없습니다.");
+        throw new MissionNotFoundError("리뷰를 찾을 수 없습니다.");
     }
     return reviews;
 };
