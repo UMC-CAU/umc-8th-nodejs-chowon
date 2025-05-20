@@ -16,7 +16,7 @@ export const MissionResponseDto = (body) => {
         id: String(body.id),
         shopId: String(body.shop_id),
         point: body.point,
-        priceCriterion: body.price_criterion,
+        priceCriterion: String(body.price_criterion),
         dueDate: body.due_date,
         createdAt: body.created_at,
         updatedAt: body.updated_at,

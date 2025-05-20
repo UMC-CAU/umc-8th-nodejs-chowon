@@ -102,21 +102,26 @@ export const createMission = async (data) => {
 
 // 미션 조회
 export const findMissionById = async (missionId) => {
-    const mission = await prisma.mission.findUnique({
-        where: { id: missionId },
-        include: {
-            shop: {
-                select: {
-                    id: true,
-                    name: true,
+    try {
+        const mission = await prisma.mission.findUnique({
+            where: { id: missionId },
+            include: {
+                shop: {
+                    select: {
+                        id: true,
+                        name: true,
+                    },
                 },
             },
-        },
-    });
-    if (!mission) {
-        throw new MissionNotFoundError("미션을 찾을 수 없습니다.");
+        });
+        if (!mission) {
+            throw new MissionNotFoundError("미션을 찾을 수 없습니다.");
+        }
+        return mission;
+    } catch (error) {
+        console.error(`미션 ID ${missionId} 조회 중 오류:`, error);
+        throw new MissionNotFoundError(`미션 조회 중 오류가 발생했습니다: ${error.message}`);
     }
-    return mission;
 };
 
 // 특정 가게의 미션 목록 조회 (Prisma 사용)

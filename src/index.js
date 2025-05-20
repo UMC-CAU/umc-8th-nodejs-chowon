@@ -9,9 +9,7 @@ import { regionController } from "./controllers/region.controller.js";
 import { shopController } from "./controllers/shop.controller.js";
 
 import { responseHandler, errorHandler } from "./utils/response.util.js";
-
-import swaggerUIExpress from "swagger-ui-express";
-import swaggerAutogen from "swagger-autogen";
+import { setupSwagger } from "./config/swagger.config.js";
 
 dotenv.config();
 const app = express();
@@ -30,40 +28,8 @@ app.use(express.json()); // JSON 형식의 요청 본문을 파싱하는 미들�
 app.use(express.urlencoded({ extended: true })); // URL 인코딩 형식의 요청 본문을 파싱하는 미들웨어 설정
 app.use(responseHandler);
 
-app.use(
-    "/docs",
-    swaggerUIExpress.serve,
-    swaggerUIExpress.setup(
-        {},
-        {
-            swaggerOptions: {
-                url: "/openapi.json",
-            },
-        }
-    )
-);
-
-app.get("/openapi.json", async (req, res) => {
-    // #swagger.ignore = true
-    const options = {
-        openapi: "3.0.0",
-        disableLogs: true,
-        writeOutputFile: false,
-    };    
-    const outputFile = "./dev/null";
-    const routes = ["./src/index.js"];
-    const doc = {
-        info: {
-            title: "UMC 8th Node.js API",
-            description: "UMC 8th Node.js 스터디 API 문서",
-            version: "1.0.0",
-        },
-        host: "localhost:3000",
-    };
-
-    const result = await swaggerAutogen(options)(outputFile, routes, doc);
-    res.json(result ? result.data : null);
-});
+// Swagger 설정 적용
+setupSwagger(app);
 
 app.get("/", (req, res) => {
     res.send("Hello World!");
