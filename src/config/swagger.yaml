@@ -26,21 +26,7 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                email:
-                  type: string
-                  example: user@example.com
-                social_type:
-                  type: string
-                  example: "KAKAO"
-                  description: "소셜 로그인 타입 (KAKAO, NAVER, GOOGLE 등)"
-                social_id:
-                  type: string
-                  example: "12345678"
-                  description: "소셜 로그인 ID"
-              required:
-                - email
+              $ref: '#/components/schemas/SignupRequest'
       responses:
         '201':
           description: 회원가입 성공
@@ -64,38 +50,7 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                id:
-                  type: integer
-                  description: 사용자 ID
-                  example: 1
-                name:
-                  type: string
-                  description: 사용자 이름
-                  example: "홍길동"
-                gender:
-                  type: boolean
-                  description: 성별 (true: 남성, false: 여성)
-                  example: true
-                birth:
-                  type: string
-                  format: date
-                  description: 생년월일 (ISO 형식)
-                  example: "1990-01-01"
-                address:
-                  type: string
-                  description: 주소
-                  example: "서울시 강남구"
-                detailAddress:
-                  type: string
-                  description: 상세 주소
-                  example: "테헤란로 123"
-              required:
-                - id
-                - name
-                - birth
-                - address
+              $ref: '#/components/schemas/UpdateUserInfoRequest'
       responses:
         '200':
           description: 정보 업데이트 성공
@@ -119,37 +74,7 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                id:
-                  type: integer
-                  description: 사용자 ID
-                  example: 1
-                serviceCheck:
-                  type: boolean
-                  description: 서비스 이용약관 동의
-                  example: true
-                privacyCheck:
-                  type: boolean
-                  description: 개인정보 처리방침 동의
-                  example: true
-                locationCheck:
-                  type: boolean
-                  description: 위치정보 이용약관 동의
-                  example: false
-                marketingCheck:
-                  type: boolean
-                  description: 마케팅 수신 동의
-                  example: false
-                ageCheck:
-                  type: boolean
-                  description: 연령 확인
-                  example: true
-              required:
-                - id
-                - serviceCheck
-                - privacyCheck
-                - ageCheck
+              $ref: '#/components/schemas/UpdateUserTermsRequest'
       responses:
         '200':
           description: 약관 동의 업데이트 성공
@@ -173,21 +98,7 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                id:
-                  type: integer
-                  description: 사용자 ID
-                  example: 1
-                foodSelect:
-                  type: array
-                  description: 선호하는 음식 카테고리 ID 목록
-                  items:
-                    type: integer
-                  example: [1, 3, 5]
-              required:
-                - id
-                - foodSelect
+              $ref: '#/components/schemas/UpdateUserFoodsRequest'
       responses:
         '200':
           description: 음식 선호도 업데이트 성공
@@ -211,19 +122,7 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                id:
-                  type: integer
-                  description: 사용자 ID
-                  example: 1
-                status:
-                  type: boolean
-                  description: 계정 상태 (true: 활성화, false: 비활성화)
-                  example: true
-              required:
-                - id
-                - status
+              $ref: '#/components/schemas/UpdateUserStatusRequest'
       responses:
         '200':
           description: 상태 업데이트 성공
@@ -254,14 +153,7 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                missionId:
-                  type: integer
-                  description: 미션 ID
-                  example: 5
-              required:
-                - missionId
+              $ref: '#/components/schemas/AddUserMissionRequest'
       responses:
         '201':
           description: 미션 추가 성공
@@ -292,37 +184,7 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                name:
-                  type: string
-                  description: 가게 이름
-                  example: "맛있는 치킨"
-                address:
-                  type: string
-                  description: 가게 주소
-                  example: "서울시 강남구 테헤란로 123"
-                foodCategoryId:
-                  type: integer
-                  description: 음식 카테고리 ID
-                  example: 2
-                ownerId:
-                  type: integer
-                  description: 가게 소유자 ID
-                  example: 3
-                status:
-                  type: integer
-                  description: 가게 상태 (1: 영업중)
-                  example: 1
-                rate:
-                  type: number
-                  description: 가게 평점
-                  example: 4.5
-              required:
-                - name
-                - address
-                - foodCategoryId
-                - ownerId
+              $ref: '#/components/schemas/CreateShopRequest'
       responses:
         '201':
           description: 가게 생성 성공
@@ -353,25 +215,7 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                point:
-                  type: integer
-                  description: 미션 달성 시 지급되는 포인트
-                  example: 100
-                priceCriterion:
-                  type: integer
-                  description: 미션 달성을 위한 최소 주문 금액
-                  example: 15000
-                dueDate:
-                  type: string
-                  format: date-time
-                  description: 미션 만료일 (ISO 형식)
-                  example: "2025-12-31T23:59:59Z"
-              required:
-                - point
-                - priceCriterion
-                - dueDate
+              $ref: '#/components/schemas/CreateMissionRequest'
       responses:
         '201':
           description: 미션 생성 성공
@@ -402,30 +246,7 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                userId:
-                  type: integer
-                  description: 리뷰 작성자 ID
-                  example: 4
-                body:
-                  type: string
-                  description: 리뷰 내용
-                  example: "음식이 매우 맛있었습니다. 특히 치킨은 최고였어요!"
-                score:
-                  type: number
-                  description: 평점 (0~5)
-                  example: 4.5
-                images:
-                  type: array
-                  description: 리뷰 이미지 URL 배열
-                  items:
-                    type: string
-                  example: ["https://example.com/image1.jpg", "https://example.com/image2.jpg"]
-              required:
-                - userId
-                - body
-                - score
+              $ref: '#/components/schemas/CreateReviewRequest'
       responses:
         '201':
           description: 리뷰 생성 성공
@@ -457,29 +278,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  resultType:
-                    type: string
-                    example: "SUCCESS"
-                  error:
-                    type: object
-                    nullable: true
-                    example: null
-                  success:
-                    type: object
-                    properties:
-                      data:
-                        type: array
-                        items:
-                          $ref: '#/components/schemas/Review'
-                      pagination:
-                        type: object
-                        properties:
-                          cursor:
-                            type: number
-                            nullable: true
-                            example: null
+                $ref: '#/components/schemas/ReviewListResponse'
         '400':
           description: 잘못된 요청
           content:
@@ -490,50 +289,277 @@ paths:
 # 공통 스키마 정의
 components:
   schemas:
+    SignupRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          example: user@example.com
+        social_type:
+          type: string
+          example: "KAKAO"
+          description: "소셜 로그인 타입 (KAKAO, NAVER, GOOGLE 등)"
+        social_id:
+          type: string
+          example: "12345678"
+          description: "소셜 로그인 ID"
+      required:
+        - email
+    UpdateUserInfoRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: 사용자 ID
+          example: 1
+        name:
+          type: string
+          description: 사용자 이름
+          example: "홍길동"
+        gender:
+          type: boolean
+          description: 성별 (true: 남성, false: 여성)
+          example: true
+        birth:
+          type: string
+          format: date
+          description: 생년월일 (ISO 형식)
+          example: "1990-01-01"
+        address:
+          type: string
+          description: 주소
+          example: "서울시 강남구"
+        detailAddress:
+          type: string
+          description: 상세 주소
+          example: "테헤란로 123"
+      required:
+        - id
+        - name
+        - birth
+        - address
+    UpdateUserTermsRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: 사용자 ID
+          example: 1
+        serviceCheck:
+          type: boolean
+          description: 서비스 이용약관 동의
+          example: true
+        privacyCheck:
+          type: boolean
+          description: 개인정보 처리방침 동의
+          example: true
+        locationCheck:
+          type: boolean
+          description: 위치정보 이용약관 동의
+          example: false
+        marketingCheck:
+          type: boolean
+          description: 마케팅 수신 동의
+          example: false
+        ageCheck:
+          type: boolean
+          description: 연령 확인
+          example: true
+      required:
+        - id
+        - serviceCheck
+        - privacyCheck
+        - ageCheck
+    UpdateUserFoodsRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: 사용자 ID
+          example: 1
+        foodSelect:
+          type: array
+          description: 선호하는 음식 카테고리 ID 목록
+          items:
+            type: integer
+          example: [1, 3, 5]
+      required:
+        - id
+        - foodSelect
+    UpdateUserStatusRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: 사용자 ID
+          example: 1
+        status:
+          type: boolean
+          description: 계정 상태 (true: 활성화, false: 비활성화)
+          example: true
+      required:
+        - id
+        - status
+    AddUserMissionRequest:
+      type: object
+      properties:
+        missionId:
+          type: integer
+          description: 미션 ID
+          example: 5
+      required:
+        - missionId
+    CreateShopRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: 가게 이름
+          example: "맛있는 치킨"
+        address:
+          type: string
+          description: 가게 주소
+          example: "서울시 강남구 테헤란로 123"
+        foodCategoryId:
+          type: integer
+          description: 음식 카테고리 ID
+          example: 2
+        ownerId:
+          type: integer
+          description: 가게 소유자 ID
+          example: 3
+        status:
+          type: integer
+          description: 가게 상태 (1: 영업중)
+          example: 1
+        rate:
+          type: number
+          description: 가게 평점
+          example: 4.5
+      required:
+        - name
+        - address
+        - foodCategoryId
+        - ownerId
+    CreateMissionRequest:
+      type: object
+      properties:
+        point:
+          type: integer
+          description: 미션 달성 시 지급되는 포인트
+          example: 100
+        priceCriterion:
+          type: integer
+          description: 미션 달성을 위한 최소 주문 금액
+          example: 15000
+        dueDate:
+          type: string
+          format: date-time
+          description: 미션 만료일 (ISO 형식)
+          example: "2025-12-31T23:59:59Z"
+      required:
+        - point
+        - priceCriterion
+        - dueDate
+    CreateReviewRequest:
+      type: object
+      properties:
+        userId:
+          type: integer
+          description: 리뷰 작성자 ID
+          example: 4
+        body:
+          type: string
+          description: 리뷰 내용
+          example: "음식이 매우 맛있었습니다. 특히 치킨은 최고였어요!"
+        score:
+          type: number
+          description: 평점 (0~5)
+          example: 4.5
+        images:
+          type: array
+          description: 리뷰 이미지 URL 배열
+          items:
+            type: string
+          example: ["https://example.com/image1.jpg", "https://example.com/image2.jpg"]
+      required:
+        - userId
+        - body
+        - score
+    ReviewListResponse:
+      type: object
+      properties:
+        status:
+          type: integer
+          description: HTTP 상태 코드
+          example: 200
+        isSuccess:
+          type: boolean
+          description: 성공 여부
+          example: true
+        message:
+          type: string
+          description: 응답 메시지
+          example: "리뷰 조회에 성공했습니다."
+        result:
+          type: object
+          properties:
+            data:
+              type: array
+              items:
+                $ref: '#/components/schemas/Review'
+            pagination:
+              type: object
+              properties:
+                cursor:
+                  type: number
+                  nullable: true
+                  example: null
     ApiResponse:
       type: object
       properties:
-        resultType:
+        status:
+          type: integer
+          description: HTTP 상태 코드
+          example: 200
+        isSuccess:
+          type: boolean
+          description: 성공 여부
+          example: true
+        message:
           type: string
-          example: "SUCCESS"
-        error:
+          description: 응답 메시지
+          example: "요청에 성공했습니다."
+        result:
           type: object
+          description: API 결과 데이터
           nullable: true
-          example: null
-        success:
-          type: object
-          properties:
-            message:
-              type: string
-              example: "작업이 성공적으로 완료되었습니다."
-            data:
-              type: object
-              description: "응답 데이터"
-
     ErrorResponse:
       type: object
       properties:
-        resultType:
+        status:
+          type: integer
+          description: HTTP 상태 코드
+          example: 400
+        isSuccess:
+          type: boolean
+          description: 성공 여부
+          example: false
+        message:
           type: string
-          example: "ERROR"
-        error:
+          description: 오류 메시지
+          example: "잘못된 요청입니다."
+        result:
           type: object
-          properties:
-            code:
-              type: integer
-              format: int32
-              example: 400
-            message:
-              type: string
-              example: "잘못된 요청입니다."
-            details:
-              type: string
-              example: "필수 항목이 누락되었습니다."
-        success:
-          type: object
+          description: 오류 상세 정보
           nullable: true
-          example: null
-
+          properties:
+            error:
+              type: object
+              description: 오류 객체
+            requestBody:
+              type: object
+              description: 요청 본문 (오류 발생 시)
     User:
       type: object
       properties:
@@ -570,7 +596,6 @@ components:
           type: string
           format: date-time
           example: "2025-01-01T00:00:00Z"
-      
     Shop:
       type: object
       properties:
@@ -615,7 +640,6 @@ components:
           type: string
           format: date-time
           example: "2025-01-01T00:00:00Z"
-          
     Review:
       type: object
       properties:
@@ -662,7 +686,6 @@ components:
           type: string
           format: date-time
           example: "2025-05-21T14:30:00Z"
-          
     Mission:
       type: object
       properties:
