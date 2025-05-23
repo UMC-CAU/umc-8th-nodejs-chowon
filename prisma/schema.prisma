@@ -16,13 +16,13 @@ datasource db {
 
 // users 테이블
 model User {
-  id             BigInt    @id @default(autoincrement())
+  id             Int    @id @default(autoincrement())
   name           String?   @db.VarChar(10)
   gender         Boolean?
   birth          DateTime? @db.Date
   address        String?   @db.VarChar(40)
   detailAddress  String?   @map("detail_address") @db.VarChar(40)
-  point          BigInt    @default(0)
+  point          Int    @default(0)
   email          String    @db.VarChar(255)
   phoneNumber    String?   @map("phone_num") @db.VarChar(11)
   marketingCheck Boolean   @default(false) @map("marketing_check")
@@ -49,7 +49,7 @@ model User {
 
 // food_category 테이블
 model FoodCategory {
-  id        BigInt   @id @default(autoincrement())
+  id        Int   @id @default(autoincrement())
   name      String   @unique @db.VarChar(10)
   createdAt DateTime @default(now()) @map("created_at") @db.DateTime(6)
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.DateTime(6)
@@ -63,9 +63,9 @@ model FoodCategory {
 
 // user_food_category 테이블
 model UserFoodCategory {
-  id             BigInt   @id @default(autoincrement())
-  foodCategoryId BigInt   @map("food_id")
-  userId         BigInt   @map("user_id")
+  id             Int   @id @default(autoincrement())
+  foodCategoryId Int   @map("food_id")
+  userId         Int   @map("user_id")
   createdAt      DateTime @default(now()) @map("created_at") @db.DateTime(6)
   updatedAt      DateTime @default(now()) @updatedAt @map("updated_at") @db.DateTime(6)
 
@@ -85,10 +85,10 @@ enum PointType {
 
 // point_history 테이블
 model PointHistory {
-  id        BigInt    @id @default(autoincrement())
-  amount    BigInt    @default(0)
+  id        Int    @id @default(autoincrement())
+  amount    Int    @default(0)
   pointType PointType @default(Add) @map("point_type")
-  userId    BigInt    @map("user_id")
+  userId    Int    @map("user_id")
   date      DateTime  @db.Date
   createdAt DateTime  @default(now()) @map("created_at") @db.DateTime(6)
   updatedAt DateTime  @default(now()) @updatedAt @map("updated_at") @db.DateTime(6)
@@ -101,7 +101,7 @@ model PointHistory {
 
 // owner 테이블
 model Owner {
-  id            BigInt    @id @default(autoincrement())
+  id            Int    @id @default(autoincrement())
   name          String    @db.VarChar(10)
   gender        Boolean
   birth         DateTime  @db.Date
@@ -123,10 +123,10 @@ model Owner {
 
 // user_mission 테이블
 model UserMission {
-  id         BigInt    @id @default(autoincrement())
+  id         Int    @id @default(autoincrement())
   status     Boolean   @default(false)
-  missionId  BigInt    @map("mission_id")
-  userId     BigInt    @map("user_id")
+  missionId  Int    @map("mission_id")
+  userId     Int    @map("user_id")
   finishDate DateTime? @map("finish_date")
   createdAt  DateTime  @default(now()) @map("created_at") @db.DateTime(6)
   updatedAt  DateTime  @default(now()) @updatedAt @map("updated_at") @db.DateTime(6)
@@ -140,10 +140,10 @@ model UserMission {
 
 // mission 테이블
 model Mission {
-  id             BigInt   @id @default(autoincrement())
-  shopId         BigInt   @map("shop_id")
-  point          BigInt
-  priceCriterion BigInt   @map("price_criterion")
+  id             Int   @id @default(autoincrement())
+  shopId         Int   @map("shop_id")
+  point          Int
+  priceCriterion Int   @map("price_criterion")
   dueDate        DateTime @map("due_date")
   createdAt      DateTime @default(now()) @map("created_at") @db.DateTime(6)
   updatedAt      DateTime @default(now()) @updatedAt @map("updated_at") @db.DateTime(6)
@@ -157,9 +157,9 @@ model Mission {
 
 // review 테이블
 model Review {
-  id        BigInt   @id @default(autoincrement())
-  shopId    BigInt   @map("shop_id")
-  userId    BigInt   @map("user_id")
+  id        Int   @id @default(autoincrement())
+  shopId    Int   @map("shop_id")
+  userId    Int   @map("user_id")
   body      String   @db.Text
   score     Float
   createdAt DateTime @default(now()) @map("created_at") @db.DateTime(6)
@@ -175,9 +175,9 @@ model Review {
 
 // review_image 테이블
 model ReviewImage {
-  id        BigInt   @id @default(autoincrement())
+  id        Int   @id @default(autoincrement())
   imageUrl  String   @map("image_url") @db.Text
-  reviewId  BigInt   @map("review_id")
+  reviewId  Int   @map("review_id")
   createdAt DateTime @default(now()) @map("created_at") @db.DateTime(6)
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.DateTime(6)
 
@@ -189,14 +189,14 @@ model ReviewImage {
 
 // shop 테이블
 model Shop {
-  id             BigInt   @id @default(autoincrement())
+  id             Int   @id @default(autoincrement())
   name           String   @db.VarChar(20)
   rate           Float?
   address        String   @db.VarChar(20)
   status         Boolean  @default(true)
-  foodCategoryId BigInt   @map("food_category_id")
-  ownerId        BigInt   @map("owner_id")
-  regionId       BigInt   @map("region_id")
+  foodCategoryId Int   @map("food_category_id")
+  ownerId        Int   @map("owner_id")
+  regionId       Int   @map("region_id")
   createdAt      DateTime @default(now()) @map("created_at") @db.DateTime(6)
   updatedAt      DateTime @default(now()) @updatedAt @map("updated_at") @db.DateTime(6)
 
@@ -213,9 +213,9 @@ model Shop {
 
 // shop_image 테이블
 model ShopImage {
-  id        BigInt   @id @default(autoincrement())
+  id        Int   @id @default(autoincrement())
   imageUrl  String   @map("image_url") @db.Text
-  shopId    BigInt   @map("shop_id")
+  shopId    Int   @map("shop_id")
   createdAt DateTime @default(now()) @map("created_at") @db.DateTime(6)
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.DateTime(6)
 
@@ -227,7 +227,7 @@ model ShopImage {
 
 // region 테이블
 model Region {
-  id        BigInt   @id @default(autoincrement())
+  id        Int   @id @default(autoincrement())
   name      String   @unique @db.VarChar(20)
   createdAt DateTime @default(now()) @map("created_at") @db.DateTime(6)
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.DateTime(6)

@@ -53,13 +53,12 @@ app.use(
         }),
     })
 );
+
+app.use(passport.initialize());
 app.use(passport.session());
 
 // Swagger 설정 적용
 setupSwagger(app);
-
-app.use(passport.initialize());
-app.use(passport.session());
 
 app.get("/", (req, res) => {
     console.log(req.user);

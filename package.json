@@ -88,7 +88,11 @@
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
         "start": "node src/index.js",
-        "dev": "nodemon --ignore src/generated/ -e js,json,prisma --exec \"prisma generate && node src/index.js\""
+        "dev": "nodemon --ignore src/generated/ -e js,json,prisma --exec \"prisma generate && node src/index.js\"",
+        "seed": "prisma db seed"
+    },
+    "prisma": {
+        "seed": "node prisma/seed.js"
     },
     "keywords": [],
     "author": "",

@@ -57,6 +57,11 @@ export const responseHandler = (req, res, next) => {
 export const errorHandler = (err, req, res, next) => {
     console.error("Error:", err);
 
+    // 이미 응답이 전송된 경우 처리하지 않음
+    if (res.headersSent) {
+        return next(err);
+    }
+
     // 기본 에러 메시지와 상태 코드
     let statusCode = err.statusCode || StatusCodes.INTERNAL_SERVER_ERROR;
     let message = err.message || "서버 내부 오류가 발생했습니다.";

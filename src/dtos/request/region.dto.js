@@ -17,3 +17,12 @@ export const CreateShopDto = (body) => {
         updatedAt: body.updatedAt || new Date(),
     }
 }
+
+export const addShopRequestDTO = (body) => {
+    return {
+        name: body.name,
+        address: body.address,
+        foodCategoryId: body.foodCategoryId,
+        ownerId: body.ownerId,
+    };
+}
