@@ -133,7 +133,7 @@ model UserMission {
 
   // Relations
   mission Mission @relation(fields: [missionId], references: [id])
-  user   User    @relation(fields: [userId], references: [id])
+  user    User    @relation(fields: [userId], references: [id])
 
   @@map("user_mission")
 }
@@ -236,4 +236,13 @@ model Region {
   shops Shop[]
 
   @@map("region")
+}
+
+model Session {
+  id        String   @id
+  sid       String   @unique
+  data      String   @db.VarChar(512)
+  expiresAt DateTime @map("expires_at") @db.DateTime(6)
+
+  @@map("session")
 }
