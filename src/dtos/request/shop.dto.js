@@ -16,3 +16,22 @@ export const CreateMissionDto = (data) => {
         dueDate,
     }
 }
+
+export const addReviewRequestDTO = (data) => {
+    return {
+        userId: data.userId,
+        shopId: data.shopId,
+        rating: data.rating,
+        content: data.content,
+    };
+}
+
+export const addMissionRequestDTO = (data) => {
+    return {
+        shopId: data.shopId,
+        point: data.point,
+        priceCriterion: data.priceCriterion,
+        deadline: data.deadline,
+        content: data.content,
+    };
+}
