@@ -1,5 +1,5 @@
 import express from 'express';
-import { regionController } from "./controllers/region.controller.js";
+import { regionController } from "../controllers/region.controller.js";
 
 const regionsRouter = express.Router();
 

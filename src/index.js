@@ -53,12 +53,11 @@ setupSwagger(app);
 
 app.get("/", (req, res) => {
     console.log(req.user);
-    res.send("Hello World!");
+    res.send("루트 경로에 오신 것을 환영합니다!");
 });
 
 app.use("/oauth2", oauthRoutes);
 app.use("/api/v1", routes);
-
 app.use(errorHandler);
 
 app.listen(port, () => {
