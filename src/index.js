@@ -8,7 +8,7 @@ import session from "express-session";
 import passport from "passport";
 import { PrismaSessionStore } from "@quixo3/prisma-session-store";
 import { prisma } from "./db.config.js";
-import { googleStrategy } from "./config/auth.config.js";
+import { googleStrategy, githubStrategy } from "./config/auth.config.js";
 
 import routes from "./routes/index.js";
 import oauthRoutes from "./routes/oauth.js";
@@ -17,6 +17,7 @@ dotenv.config();
 
 // Passport 설정
 passport.use(googleStrategy);
+passport.use(githubStrategy);
 passport.serializeUser((user, done) => done(null, user));
 passport.deserializeUser((user, done) => done(null, user));
 

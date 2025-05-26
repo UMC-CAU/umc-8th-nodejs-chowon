@@ -16,4 +16,15 @@ router.get(
     (req, res) => res.redirect("/")
 );
 
+router.get("/login/github", passport.authenticate("github"));
+
+router.get(
+    "/callback/github",
+    passport.authenticate("github", {
+        failureRedirect: "/oauth2/login/github",
+        failureMessage: true,
+    }),
+    (req, res) => res.redirect("/")
+);
+
 export default router;

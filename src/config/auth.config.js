@@ -1,6 +1,7 @@
 import dotenv from "dotenv";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import { prisma } from "../db.config.js";
+import { Strategy as GithubStrategy } from "passport-github2";
 
 dotenv.config();
 
@@ -21,13 +22,29 @@ export const googleStrategy = new GoogleStrategy(
     }
 );
 
+export const githubStrategy = new GithubStrategy(
+    {
+        clientID: process.env.GITHUB_CLIENT_ID,
+        clientSecret: process.env.GITHUB_CLIENT_SECRET,
+        callbackURL: `http://localhost:${
+            process.env.PORT || 3000
+        }/oauth2/callback/github`,
+        scope: ["user:email", "read:user"],
+    },
+    (accessToken, refreshToken, profile, cb) => {
+        return githubVerify(profile)
+            .then((user) => cb(null, user))
+            .catch((err) => cb(err));
+    }
+);
+
 const googleVerify = async (profile) => {
     const email = profile.emails?.[0]?.value;
     if (!email) {
         throw new Error(`profile.email was not found: ${profile}`);
     }
 
-    const user = await prisma.user.findFirst({ where: { email }})
+    const user = await prisma.user.findFirst({ where: { email } });
     if (user != null) {
         return { id: user.id, email: user.email, name: user.name };
     }
@@ -35,10 +52,32 @@ const googleVerify = async (profile) => {
     const created = await prisma.user.create({
         data: {
             email,
-            socialType: "GOOGLE",
+            socialType: "Google",
             socialId: profile.id,
             name: profile.displayName || null,
-        }
-    })
+        },
+    });
     return { id: created.id, email: created.email, name: created.name };
-}
+};
+
+const githubVerify = async (profile) => {
+    const email = profile.emails?.[0]?.value;
+    if (!email) {
+        throw new Error(`profile.email was not found: ${profile}`);
+    }
+
+    const user = await prisma.user.findFirst({ where: { email } });
+    if (user != null) {
+        return { id: user.id, email: user.email, name: user.name };
+    }
+
+    const created = await prisma.user.create({
+        data: {
+            email,
+            socialType: "Github",
+            socialId: profile.id,
+            name: profile.displayName || null,
+        },
+    });
+    return { id: created.id, email: created.email, name: created.name };
+};
