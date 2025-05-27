@@ -52,7 +52,7 @@ const googleVerify = async (profile) => {
     const created = await prisma.user.create({
         data: {
             email,
-            socialType: "Google",
+            socialType: "GOOGLE",
             socialId: profile.id,
             name: profile.displayName || null,
         },

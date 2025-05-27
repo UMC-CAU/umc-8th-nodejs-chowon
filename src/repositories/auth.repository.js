@@ -8,8 +8,17 @@ export const createUser = async (data) => {
     if (user) {
         return null;
     }
-    const created = await prisma.user.create({ data: data });
-    return created.id;
+    
+    try {
+        const created = await prisma.user.create({ data: data });
+        return created.id;
+    } catch (error) {
+        // Prisma unique constraint violation 에러 처리
+        if (error.code === 'P2002' && error.meta?.target?.includes('email')) {
+            return null; // 중복 이메일로 처리
+        }
+        throw error; // 다른 에러는 그대로 throw
+    }
 };
 
 // 유저 조회
