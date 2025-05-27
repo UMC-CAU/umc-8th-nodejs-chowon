@@ -4,7 +4,7 @@ import { createShop } from "../services/region.service.js";
 
 const createShopByRegionId = async (req, res) => {
     console.log("특정 지역에 가게 생성 중...");
-    const regionId = req.params.region_id;
+    const regionId = req.params.regionId;
     try {
         const shopDto = CreateShopDto(req.body);
         const shop = await createShop(regionId, shopDto);

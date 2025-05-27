@@ -76,8 +76,8 @@ export const updateUserTerms = async (userId, data) => {
 };
 
 export const updateUserFoods = async (userId, data) => {
-    for (const food_id of data.preferences) {
-        await updateUserPreference({ userId, foodId: food_id });
+    for (const foodId of data.preferences) {
+        await updateUserPreference({ userId, foodId });
     }
     const preferences = await findUserPreferencesByUserId(userId);
     return UserFoodsResponseDto(userId, preferences);

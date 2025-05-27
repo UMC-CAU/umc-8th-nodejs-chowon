@@ -8,7 +8,7 @@ import {
 
 const createUserMission = async (req, res) => {
     console.log("유저에게 미션 추가 중...");
-    const userId = req.params.user_id;
+    const userId = req.params.userId;
     try {
         const missionDto = AddMissionDto(req.body);
         const mission = await assignMissionToUser(userId, missionDto);

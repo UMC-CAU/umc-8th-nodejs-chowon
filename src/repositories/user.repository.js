@@ -44,10 +44,10 @@ export const createUserMission = async (data) => {
 };
 
 // 유저 미션 조회
-export const findUserMissionById = async (user_mission_id) => {
+export const findUserMissionById = async (userMissionId) => {
     try {
         const mission = await prisma.userMission.findFirstOrThrow({
-            where: { id: user_mission_id },
+            where: { id: userMissionId },
             select: {
                 id: true,
                 userId: true,
@@ -113,10 +113,10 @@ export const findUserMissionsById = async (userId) => {
 };
 
 // 내가 진행 중인 미션을 진행 완료로 바꾸기 (Prisma 사용)
-export const updateUserMission = async (user_mission_id) => {
+export const updateUserMission = async (userMissionId) => {
     try {
         const mission = await prisma.userMission.update({
-            where: { id: user_mission_id },
+            where: { id: userMissionId },
             data: { status: "complete", finishDate: new Date() },
         });
         return mission;

@@ -3,11 +3,11 @@
 export const UserMissionResponseDto = (user) => {
     return {
         id: user.id,
-        userId: user.user_id,
-        missionId: user.mission_id,
+        userId: user.userId,
+        missionId: user.missionId,
         status: user.status,
-        createdAt: user.created_at,
-        updatedAt: user.updated_at,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
     };
 };
 
@@ -63,9 +63,9 @@ export const completeMissionResponseDTO = (user) => {
 export const getMyMissionsResponseDTO = (user) => {
     return {
         id: user.id,
-        userId: user.user_id,
-        missionId: user.mission_id,
+        userId: user.userId,
+        missionId: user.missionId,
         status: user.status,
-        createdAt: user.created_at,
+        createdAt: user.createdAt,
     };
 };

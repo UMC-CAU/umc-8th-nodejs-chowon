@@ -8,7 +8,7 @@ import { CreateMissionDto, CreateReviewDto } from "../dtos/request/shop.dto.js";
 
 const createMissionByShopId = async (req, res) => {
     console.log("가게에 미션 생성 중...");
-    const shopId = req.params.shop_id;
+    const shopId = req.params.shopId;
     try {
         const missionDto = CreateMissionDto(req.body);
         const mission = await createMission(shopId, missionDto);
@@ -30,7 +30,7 @@ const createMissionByShopId = async (req, res) => {
 
 const createReviewByShopId = async (req, res) => {
     console.log("가게에 리뷰 생성 중...");
-    const shopId = req.params.shop_id;
+    const shopId = req.params.shopId;
     try {
         const reviewDto = CreateReviewDto(req.body);
         const review = await createReview(shopId, reviewDto);
@@ -52,7 +52,7 @@ const createReviewByShopId = async (req, res) => {
 const getReviewsByShopId = async (req, res, next) => {
     console.log("가게 리뷰 조회 중...");
     try {
-        const reviews = await findReviewsByShopId(req.params.shop_id);
+        const reviews = await findReviewsByShopId(req.params.shopId);
         res.sendSuccess(
             StatusCodes.OK,
             "리뷰가 성공적으로 조회되었습니다.",

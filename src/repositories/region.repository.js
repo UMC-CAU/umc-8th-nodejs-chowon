@@ -1,7 +1,7 @@
 import { prisma } from "../db.config.js"; // prisma import 확인
 import { InvalidParameterError } from "../utils/error.util.js";
 
-// 가게 생성 (region_id)
+// 가게 생성 (regionId)
 export const createShop = async (data) => {
     try {
         const shop = await prisma.shop.create({

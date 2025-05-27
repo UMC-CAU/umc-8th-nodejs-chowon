@@ -2,8 +2,8 @@ export const UserResponseDto = (user) => {
     return {
         id: user.id,
         email: user.email,
-        socialType: user.social_type,
-        socialId: user.social_id,
+        socialType: user.socialType,
+        socialId: user.socialId,
     };
 };
 
@@ -14,18 +14,18 @@ export const UserInfoResponseDto = (user) => {
         gender: user.gender,
         birth: user.birth,
         address: user.address,
-        detailAddress: user.detail_address,
+        detailAddress: user.detailAddress,
     };
 };
 
 export const UserTermsResponseDto = (user) => {
     return {
         id: user.id,
-        serviceCheck: user.service_check,
-        privacyCheck: user.privacy_check,
-        locationCheck: user.location_check,
-        marketingCheck: user.marketing_check,
-        ageCheck: user.age_check,
+        serviceCheck: user.serviceCheck,
+        privacyCheck: user.privacyCheck,
+        locationCheck: user.locationCheck,
+        marketingCheck: user.marketingCheck,
+        ageCheck: user.ageCheck,
     };
 };
 

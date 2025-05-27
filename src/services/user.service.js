@@ -9,14 +9,14 @@ import {
 
 
 export const assignMissionToUser = async (userId, data) => {
-    const user_mission_id = await createUserMission({
+    const userMissionId = await createUserMission({
         userId,
         missionId: data.missionId,
     });
-    if (user_mission_id === null) {
+    if (userMissionId === null) {
         throw new Error("존재하지 않는 미션입니다.");
     }
 
-    const user_mission = await findUserMissionById(user_mission_id);
-    return UserMissionResponseDto(user_mission);
+    const userMission = await findUserMissionById(userMissionId);
+    return UserMissionResponseDto(userMission);
 }

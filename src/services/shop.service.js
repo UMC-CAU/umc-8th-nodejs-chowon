@@ -7,6 +7,7 @@ import {
     createReview as createReviewInDB,
     findMissionById,
     findReviewById,
+    findReviewByShopId,
 } from "../repositories/shop.repository.js";
 
 export const createReview = async (shopId, reviewDto) => {
@@ -54,6 +55,6 @@ export const createMission = async (shopId, missionDto) => {
 };
 
 export const findReviewsByShopId = async (shopId) => {
-    const reviews = await findReviewById(shopId);
+    const reviews = await findReviewByShopId(shopId);
     return reviews.map((review) => ReviewResponseDto(review));
 }

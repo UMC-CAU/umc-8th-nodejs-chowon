@@ -2,8 +2,8 @@
 export const CreateUserDto = (body) => {
     return {
         email: body.email,
-        socialType: body.social_type,
-        socialId: body.social_id,
+        socialType: body.socialType,
+        socialId: body.socialId,
     };
 };
 
