@@ -5,6 +5,16 @@ ca.pem
 # 생성된 Prisma 파일들
 src/generated/prisma
 
+# TypeScript 관련 파일들
+dist/                           # TypeScript 빌드 출력 디렉토리
+*.tsbuildinfo                   # TypeScript 증분 빌드 캐시 파일
+.tmp/                          # 임시 파일 (tsconfig.json에서 지정한 경로)
+node_modules/.tmp/             # TypeScript 빌드 캐시
+
+# TypeScript 컴파일 출력 파일들
+**/*.js.map                     # JavaScript 소스맵 파일들 (TypeScript 컴파일 결과)
+**/*.d.ts.map                   # 선언 파일 소스맵
+
 # Created by https://www.toptal.com/developers/gitignore/api/node
 # Edit at https://www.toptal.com/developers/gitignore?templates=node
 
@@ -58,6 +68,17 @@ web_modules/
 
 # TypeScript cache
 *.tsbuildinfo
+
+# TypeScript 개발 도구 캐시
+.ts-node/                      # ts-node 캐시 디렉토리
+.tsx-cache/                    # tsx 캐시 디렉토리
+
+# IDE/Editor 관련 파일들
+.vscode/                       # VS Code 설정 (이미 상단에 있지만 여기서도 명시)
+.idea/                         # IntelliJ IDEA 설정
+*.swp                          # Vim 스왑 파일
+*.swo                          # Vim 스왑 파일
+*~                             # 백업 파일
 
 # Optional npm cache directory
 .npm
@@ -151,5 +172,45 @@ dist
 # macOS system files
 .DS_Store
 src/.DS_Store
+
+# Windows system files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# 마이그레이션 도구 관련
+migration-logs/                # 마이그레이션 로그 파일들
+*.migration.backup             # 마이그레이션 백업 파일들
+
+# 개발 환경별 설정 파일들
+.env.local
+.env.development
+.env.test
+.env.production
+.env.staging
+
+# 임시 파일들
+temp/
+tmp/
+*.tmp
+*.temp
+
+# 로그 파일들
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# 데이터베이스 관련
+*.db
+*.sqlite
+*.sqlite3
+
+# 테스트 관련
+coverage/
+.nyc_output/
+test-results/
+junit.xml
 
 # End of https://www.toptal.com/developers/gitignore/api/node

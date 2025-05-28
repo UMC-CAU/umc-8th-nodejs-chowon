@@ -87,8 +87,15 @@
     },
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
-        "start": "node src/index.js",
-        "dev": "nodemon --ignore src/generated/ -e js,json,prisma --exec \"prisma generate && node src/index.js\"",
+        "start": "tsx src/index.ts",
+        "start:js": "node src/index.js",
+        "build": "tsc",
+        "build:watch": "tsc --watch",
+        "dev": "nodemon --ignore src/generated/ -e js,ts,json,prisma --exec \"prisma generate && tsx src/index.ts\"",
+        "dev:js": "nodemon --ignore src/generated/ -e js,ts,json,prisma --exec \"prisma generate && node src/index.js\"",
+        "type-check": "tsc --noEmit",
+        "migration:check": "node migration-helper.js check",
+        "migration:help": "node migration-helper.js help",
         "seed": "prisma db seed"
     },
     "prisma": {
@@ -98,7 +105,15 @@
     "author": "",
     "license": "ISC",
     "devDependencies": {
+        "@types/cors": "^2.8.18",
         "@types/express": "^5.0.1",
-        "nodemon": "^3.1.10"
+        "@types/express-session": "^1.18.1",
+        "@types/node": "^22.15.23",
+        "@types/passport": "^1.0.17",
+        "@types/passport-github2": "^1.2.9",
+        "@types/passport-google-oauth20": "^2.0.16",
+        "nodemon": "^3.1.10",
+        "tsx": "^4.19.4",
+        "typescript": "^5.8.3"
     }
 }

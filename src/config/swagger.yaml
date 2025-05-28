@@ -135,7 +135,8 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'  /users/{userId}/missions:
+                $ref: '#/components/schemas/ErrorResponse'
+  /users/{userId}/missions:
     post:
       tags:
         - User
@@ -165,7 +166,8 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'  /regions/{regionId}/shops:
+                $ref: '#/components/schemas/ErrorResponse'
+  /regions/{regionId}/shops:
     post:
       tags:
         - Region
@@ -195,7 +197,8 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'  /shops/{shopId}/missions:
+                $ref: '#/components/schemas/ErrorResponse'
+  /shops/{shopId}/missions:
     post:
       tags:
         - Shop
@@ -225,7 +228,8 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'  /shops/{shopId}/reviews:
+                $ref: '#/components/schemas/ErrorResponse'
+  /shops/{shopId}/reviews:
     post:
       tags:
         - Shop
