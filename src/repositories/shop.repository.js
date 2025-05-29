@@ -1,12 +1,15 @@
 import { prisma } from "../db.config.js";
-import { ReviewCreationError, ReviewImageCreationError, InvalidParameterError, MissionNotFoundError } from "../utils/error.util.js";
+import { InvalidParameterError, MissionNotFoundError, ReviewCreationError, ReviewImageCreationError } from "../utils/error.util.js";
 
 // 리뷰 생성
 export const createReview = async (data) => {
     try {
+        const shopId = parseInt(data.shopId);
+        const userId = parseInt(data.userId);
+        
         const shop = await prisma.shop.findUnique({
             where: {
-                id: data.shopId,
+                id: shopId,
             },
         });
         if (!shop) {
@@ -15,7 +18,7 @@ export const createReview = async (data) => {
 
         const user = await prisma.user.findUnique({
             where: {
-                id: data.userId,
+                id: userId,
             },
         });
         if (!user) {
@@ -27,12 +30,10 @@ export const createReview = async (data) => {
 
         const result = await prisma.review.create({
             data: {
-                userId: data.userId,
-                shopId: data.shopId,
+                userId: userId,
+                shopId: shopId,
                 body: data.body,
                 score: data.score,
-                createdAt: new Date(),
-                updatedAt: new Date(),
             },
         });
         if (!result) {
@@ -67,7 +68,7 @@ export const findReviewById = async (reviewId) => {
     const review = await prisma.review.findUnique({
         where: { id: reviewId },
         include: {
-            images: {
+            reviewImages: {
                 select: {
                     imageUrl: true,
                 },
@@ -77,7 +78,7 @@ export const findReviewById = async (reviewId) => {
     if (!review) {
         throw new MissionNotFoundError("리뷰를 찾을 수 없습니다.");
     }
-    const images = review.images.map((image) => image.imageUrl);
+    const images = review.reviewImages.map((image) => image.imageUrl);
     return {
         ...review,
         images: images,
@@ -88,7 +89,7 @@ export const findReviewById = async (reviewId) => {
 export const createMission = async (data) => {
     const mission = await prisma.mission.create({
         data: {
-            shopId: data.shopId,
+            shopId: parseInt(data.shopId),
             point: data.point,
             priceCriterion: data.priceCriterion,
             dueDate: data.dueDate,
@@ -127,7 +128,7 @@ export const findMissionById = async (missionId) => {
 // 특정 가게의 미션 목록 조회 (Prisma 사용)
 export const findMissionsByShopId = async (shopId) => {
     const missions = await prisma.mission.findMany({
-        where: { shopId: shopId },
+        where: { shopId: parseInt(shopId) },
         include: {
             shop: {
                 select: {
@@ -140,21 +141,25 @@ export const findMissionsByShopId = async (shopId) => {
     return missions;
 };
 
-// 특정 가게의 리뷰 목록 조회 (이미지 제외)
+// 특정 가게의 리뷰 목록 조회 (이미지 포함)
 export const findReviewByShopId = async (shopId) => {
     const reviews = await prisma.review.findMany({
-        where: { shopId: shopId },
-        select: {
-            id: true,
-            userId: true,
-            body: true,
-            score: true,
-            createdAt: true,
-            updatedAt: true,
+        where: { shopId: parseInt(shopId) },
+        include: {
+            reviewImages: {
+                select: {
+                    imageUrl: true,
+                },
+            },
         },
     });
     if (!reviews) {
         throw new MissionNotFoundError("리뷰를 찾을 수 없습니다.");
     }
-    return reviews;
+    
+    // 이미지 URL 배열로 변환
+    return reviews.map(review => ({
+        ...review,
+        images: review.reviewImages.map(img => img.imageUrl)
+    }));
 };

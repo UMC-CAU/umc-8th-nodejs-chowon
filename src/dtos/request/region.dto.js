@@ -11,7 +11,7 @@ export const CreateShopDto = (body) => {
         address: body.address,
         foodCategoryId: body.foodCategoryId,
         ownerId: body.ownerId,
-        status: body.status || 1,
+        status: body.status === "OPEN" || body.status === true || body.status === 1,
         rate: body.rate || 0,
         createdAt: body.createdAt || new Date(),
         updatedAt: body.updatedAt || new Date(),

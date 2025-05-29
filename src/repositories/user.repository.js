@@ -1,5 +1,5 @@
 import { prisma } from "../db.config.js";
-import { AlreadyInProgressMissionError, InvalidParameterError, MissionQueryError, MissionUpdateError } from "../utils/error.util.js";
+import { AlreadyInProgressMissionError, InvalidParameterError, MissionNotFoundError, MissionQueryError, MissionUpdateError } from "../utils/error.util.js";
 
 
 
@@ -7,7 +7,7 @@ import { AlreadyInProgressMissionError, InvalidParameterError, MissionQueryError
 export const createUserMission = async (data) => {
     try {
         const isExistMission = await prisma.mission.findUnique({
-            where: { id: data.missionId },
+            where: { id: parseInt(data.missionId) },
         });
         // 미션이 존재하지 않을 경우 에러 발생
         if (!isExistMission) {
@@ -17,8 +17,8 @@ export const createUserMission = async (data) => {
         // 이미 진행 중인 미션인지 확인
         const existingUserMission = await prisma.userMission.findFirst({
             where: {
-                userId: data.userId,
-                missionId: data.missionId,
+                userId: parseInt(data.userId),
+                missionId: parseInt(data.missionId),
             },
         });
         if (existingUserMission) {
@@ -27,8 +27,8 @@ export const createUserMission = async (data) => {
 
         const user_mission = await prisma.userMission.create({
             data: {
-                userId: data.userId,
-                missionId: data.missionId,
+                userId: parseInt(data.userId),
+                missionId: parseInt(data.missionId),
             },
         });
         if (!user_mission) {
@@ -47,7 +47,7 @@ export const createUserMission = async (data) => {
 export const findUserMissionById = async (userMissionId) => {
     try {
         const mission = await prisma.userMission.findFirstOrThrow({
-            where: { id: userMissionId },
+            where: { id: parseInt(userMissionId) },
             select: {
                 id: true,
                 userId: true,

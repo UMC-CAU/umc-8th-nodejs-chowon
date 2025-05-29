@@ -9,12 +9,12 @@
     /* 점진적 마이그레이션 설정 - TODO: 마이그레이션 완료 후 제거 */
     "allowJs": true,                             // JavaScript 파일 허용 (기존 .js 파일과 함께 작업 가능)
     "checkJs": false,                            // JavaScript 파일은 타입 체크하지 않음 (선택적으로 나중에 활성화)
-    "incremental": true,                         // 증분 컴파일 (빠른 재컴파일)
+    "incremental": false,                        // 증분 컴파일 (빠른 재컴파일) - 임시 비활성화
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.tsbuildinfo", // 빌드 정보 캐시 위치
     
     /* 출력 설정 */
     "outDir": "./dist",                          // 컴파일된 파일 출력 디렉터리
-    "rootDir": "./",                             // 소스 파일 루트 디렉터리 (프로젝트 루트)
+    "rootDir": "./src",                          // 소스 파일 루트 디렉터리 (src 폴더)
     "removeComments": true,                      // 컴파일된 파일에서 주석 제거
     "sourceMap": true,                           // 디버깅을 위한 소스맵 생성
     
@@ -41,22 +41,12 @@
     "emitDecoratorMetadata": true,              // 데코레이터 메타데이터 생성
     
     /* 경로 설정 */
-    "baseUrl": ".",                              // 상대 경로의 기준점
-    "paths": {                                   // 경로 별칭 설정
-      "@/*": ["src/*"],                         // @/로 시작하는 경로를 src/로 매핑
-      "@config/*": ["src/config/*"],            // 설정 파일 경로 별칭
-      "@controllers/*": ["src/controllers/*"],  // 컨트롤러 경로 별칭
-      "@services/*": ["src/services/*"],        // 서비스 경로 별칭
-      "@repositories/*": ["src/repositories/*"], // 레포지토리 경로 별칭
-      "@utils/*": ["src/utils/*"],              // 유틸리티 경로 별칭
-      "@dtos/*": ["src/dtos/*"]                 // DTO 경로 별칭
-    }
+    "baseUrl": "."                               // 상대 경로의 기준점
   },
   
   /* 포함/제외 설정 */
   "include": [
-    "src/**/*.ts",                               // src 폴더 내 TypeScript 파일만 포함
-    "migration-guide.ts"                         // 마이그레이션 가이드 파일 포함 - TODO: 마이그레이션 완료 후 제거
+    "src/**/*.ts"                                // src 폴더 내 TypeScript 파일만 포함
   ],
   "exclude": [
     "node_modules",                              // node_modules 제외

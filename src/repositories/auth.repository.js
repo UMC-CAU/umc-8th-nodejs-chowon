@@ -23,7 +23,7 @@ export const createUser = async (data) => {
 
 // 유저 조회
 export const findUserById = async (userId) => {
-    const user = await prisma.user.findFirst({ where: { id: userId } });
+    const user = await prisma.user.findFirst({ where: { id: parseInt(userId) } });
     // 유저가 존재하지 않을 경우 null 리턴
     if (!user) {
         return null;
@@ -35,7 +35,7 @@ export const findUserById = async (userId) => {
 export const updateUserInfo = async (data) => {
     try {
         const user = await prisma.user.update({
-            where: { id: data.userId },
+            where: { id: parseInt(data.userId) },
             data: {
                 name: data.name,
                 gender: data.gender,
@@ -54,7 +54,7 @@ export const updateUserInfo = async (data) => {
 export const findUserInfoById = async (userId) => {
     try {
         const user = await prisma.user.findFirst({
-            where: { id: userId },
+            where: { id: parseInt(userId) },
             select: {
                 id: true,
                 name: true,
@@ -79,7 +79,7 @@ export const findUserInfoById = async (userId) => {
 export const updateUserTerms = async (data) => {
     try {
         const user = await prisma.user.update({
-            where: { id: data.userId },
+            where: { id: parseInt(data.userId) },
             data: {
                 serviceCheck: data.serviceCheck,
                 privacyCheck: data.privacyCheck,
@@ -98,7 +98,7 @@ export const updateUserTerms = async (data) => {
 export const findUserTermsById = async (userId) => {
     try {
         const user = await prisma.user.findFirst({
-            where: { id: userId },
+            where: { id: parseInt(userId) },
             select: {
                 id: true,
                 serviceCheck: true,

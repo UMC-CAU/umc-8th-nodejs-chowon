@@ -8,9 +8,9 @@ export const createShop = async (data) => {
             data: {
                 name: data.name,
                 address: data.address,
-                foodCategoryId: data.foodCategoryId,
-                ownerId: data.ownerId,
-                regionId: data.regionId,
+                foodCategoryId: parseInt(data.foodCategoryId),
+                ownerId: parseInt(data.ownerId),
+                regionId: parseInt(data.regionId),
                 status: data.status,
                 rate: data.rate,
                 createdAt: data.createdAt,
@@ -32,7 +32,7 @@ export const findShopById = async (shopId) => {
     try {
         const shop = await prisma.shop.findUnique({
             where: {
-                id: shopId,
+                id: parseInt(shopId),
             },
         });
         // shop이 null일 경우, 여기서 NotFoundError 등을 throw 할 수 있습니다.
@@ -50,7 +50,7 @@ export const findRegionById = async (regionId) => {
     try {
         const region = await prisma.region.findUnique({
             where: {
-                id: regionId,
+                id: parseInt(regionId),
             },
         });
         // region이 null일 경우, 여기서 NotFoundError 등을 throw 할 수 있습니다.

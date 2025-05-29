@@ -5,13 +5,13 @@ import express, { Application, Request, Response } from "express";
 import session from "express-session";
 import passport from "passport";
 
-import { githubStrategy, googleStrategy } from "@config/auth.config";
-import { setupSwagger } from "@config/swagger.config";
-import { errorHandler, responseHandler } from "@utils/response.util";
-import { prisma } from "./db.config";
+import { githubStrategy, googleStrategy } from "./config/auth.config.js";
+import { setupSwagger } from "./config/swagger.config.js";
+import { prisma } from "./db.config.js";
+import { errorHandler, responseHandler } from "./utils/response.util.js";
 
-import routes from "./routes/index";
-import oauthRoutes from "./routes/oauth";
+import routes from "./routes/index.js";
+import oauthRoutes from "./routes/oauth.js";
 
 // 환경 변수 로드
 dotenv.config();
